@@ -1,0 +1,31 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; // Garante que a toolbar fique acima de outros elementos
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+}
+
+app-sidebar {
+  display: flex;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Garante que o container usa o restante do espaco */
+  height: 100vh; /* Força o container a usar toda a extensão da altura */
+}
+
+

@@ -1,0 +1,37 @@
+<section class="login-section">
+  <div class="login-panel">
+    <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="signIn()">
+      <ng-container *ngFor="let field of formFields">
+        <div [id]="field.id">
+          <label [for]="field.name">{{ field.label }}:</label>
+          <input
+            [type]="field.type"
+            [id]="field.name"
+            [formControlName]="field.name"
+            [ngClass]="{'invalid-input': isInvalid(field.name)}"
+          />
+          <div *ngIf="isInvalid(field.name)" class="error-message">
+            <span *ngFor="let error of field.errors">
+              {{ error.message }}
+            </span>
+          </div>
+        </div>
+      </ng-container>
+
+      <div id="login_form_footer">
+        <ng-container *ngFor="let action of footerActions">
+          <div id="{{ action.id }}">
+            <a href="javascript:void(0);" (click)="action.handler()">
+              <span class="link">{{ action.label }}</span>
+            </a>
+          </div>
+        </ng-container>
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+  <div class="image-container">
+    <img src="assets/login-image.jpg" alt="Login Image">
+  </div>
+</section>

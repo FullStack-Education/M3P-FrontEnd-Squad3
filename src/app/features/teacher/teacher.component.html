@@ -1,0 +1,124 @@
+<div class="teacher-form">
+  <div class="form-header">
+    <h2 class="form-title">Cadastro de Docente</h2>
+    <div class="form-actions">
+      <button mat-icon-button  [disabled]="!(viewMode === 'read')" (click)="enableEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button [disabled]="!(viewMode === 'read')" (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="teacherForm">
+    <div class="form-row">
+      <mat-form-field class="full-width">
+        <mat-label>Nome Completo</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone" />
+      </mat-form-field>
+    </div>
+
+    <!-- Second line: Gender, MaritalStatus, BirthDate -->
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Gênero</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option value="M">Masculino</mat-option>
+          <mat-option value="F">Feminino</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Estado Civil</mat-label>
+        <mat-select formControlName="maritalStatus">
+          <mat-option value="single">Solteiro(a)</mat-option>
+          <mat-option value="married">Casado(a)</mat-option>
+          <!-- Add more options as needed -->
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Data de Nascimento</mat-label>
+        <input matInput formControlName="birthDate" placeholder="dd/mm/yyyy" />
+      </mat-form-field>
+    </div>
+
+    <!-- Third line: Email, Password -->
+    <div class="form-row">
+      <mat-form-field class="full-width">
+        <mat-label>E-mail</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Senha</mat-label>
+        <input matInput formControlName="password" type="password" />
+      </mat-form-field>
+    </div>
+
+    <!-- Fourth line: CPF, RG, Naturalness -->
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>RG</mat-label>
+        <input matInput formControlName="rg" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Naturalidade</mat-label>
+        <input matInput formControlName="naturalness" />
+      </mat-form-field>
+    </div>
+
+    <!-- Fifth line: Subjects -->
+    <div class="form-row">
+      <mat-form-field class="full-width">
+        <mat-label>Matérias</mat-label>
+        <mat-select formControlName="subjects" multiple >
+          <mat-option *ngFor="let subject of subjects" [value]="subject.id">
+            {{ subject.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" (blur)="onCepBlur()" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Logradouro</mat-label>
+        <input matInput formControlName="street" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Número</mat-label>
+        <input matInput formControlName="number" />
+      </mat-form-field>
+    </div>
+      <div class="form-row">
+      <mat-form-field>
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="city" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Estado</mat-label>
+        <input matInput formControlName="state"/>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Complemento</mat-label>
+        <input matInput formControlName="complement" />
+      </mat-form-field>
+    </div>
+  </form>
+
+  <!-- Form footer with save button -->
+  <div class="form-footer">
+    <button *ngIf="viewMode !== 'read'" mat-raised-button color="primary" (click)="cancelEdit()">Cancelar</button>
+    <button *ngIf="viewMode !== 'read'" mat-raised-button color="primary" (click)="onSave()">Salvar</button>
+  </div>
+</div>

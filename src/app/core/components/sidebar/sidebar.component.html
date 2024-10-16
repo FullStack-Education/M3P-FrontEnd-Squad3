@@ -1,0 +1,92 @@
+ <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav 
+    #sidenav 
+    mode="side" 
+    [(opened)]="opened" 
+    [fixedInViewport]="true"
+    [style.width.px]="opened ? 250 : 250" 
+    class="sidenav">
+    
+    
+
+    <mat-nav-list>
+      <mat-list-item id="sidebar-header" (click)="sidenav.toggle()">
+        <h3 *ngIf="opened">Menu
+        <mat-icon id="inner-icon-toggle-sidebar" >{{ opened ? 'close' : 'menu' }}</mat-icon>
+        </h3>
+      </mat-list-item>
+
+
+      <mat-list-item>
+        <p>Cadastros</p>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-button [routerLink]="['/home']">
+          <mat-icon>home</mat-icon>
+          <span *ngIf="opened">Início</span>
+        </button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="isAdmin" >
+        <button mat-button [routerLink]="['/teacher']">
+          <mat-icon>school</mat-icon>
+          <span *ngIf="opened">Cadastrar Docentes</span>
+        </button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="isAdmin">
+        <button mat-button [routerLink]="['/student']">
+          <mat-icon>group</mat-icon>
+          <span *ngIf="opened">Cadastrar Alunos</span>
+        </button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="isAdmin || isDocente">
+        <button mat-button [routerLink]="['/enrollment']">
+          <mat-icon>class</mat-icon>
+          <span *ngIf="opened">Cadastrar Turma</span>
+        </button>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="isAdmin || isDocente">
+        <button mat-button [routerLink]="['/grade']">
+          <mat-icon>assignment</mat-icon>
+          <span *ngIf="opened">Cadastrar Avaliação</span>
+        </button>
+      </mat-list-item>
+
+      
+      <mat-list-item *ngIf="isAdmin">
+        <p>Detalhamento</p>
+      </mat-list-item>
+      <mat-list-item *ngIf="isAluno">
+        <button mat-button [routerLink]="['/grade-list']">
+          <mat-icon>grade</mat-icon>
+          <span *ngIf="opened">Notas</span>
+        </button>
+      </mat-list-item>
+      <mat-list-item *ngIf="isAdmin">
+        <button mat-button [routerLink]="['/teacher-list']">
+          <mat-icon>list</mat-icon>
+          <span *ngIf="opened">Listagem de Docentes</span>
+        </button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+      <mat-list-item>
+        <button mat-button (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span *ngIf="opened">Sair</span>
+        </button>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  
+
+  <mat-sidenav-content [ngClass]="{'hidden-content': opened}">
+    <mat-list-item (click)="sidenav.toggle()">
+      <mat-icon >{{ opened ? 'arrow_back_ios' : 'menu' }}</mat-icon>
+    </mat-list-item> 
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

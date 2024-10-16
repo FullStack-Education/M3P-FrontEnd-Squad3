@@ -1,0 +1,14 @@
+<h1>Mensagem do sistema:</h1>
+<div id="dialog_message">
+  <p>{{ this.data.message }}</p>
+</div>
+
+<div id="footer">
+  <div *ngFor="let action of this.data.actions">
+    <button 
+      type="button" 
+      class="btn btn-primary"
+    (click)="runAction(action.action)">{{ action.label }}
+    </button>
+  </div>
+</div>

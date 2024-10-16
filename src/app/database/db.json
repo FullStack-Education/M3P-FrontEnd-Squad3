@@ -1,0 +1,371 @@
+{
+  "papel": [
+    {
+      "id": "1",
+      "name": "Admin"
+    },
+    {
+      "id": "2",
+      "name": "Docente"
+    },
+    {
+      "id": "3",
+      "name": "Aluno"
+    }
+  ],
+  "usuario": [
+    {
+      "id": "1",
+      "name": "Alice De Santiago",
+      "papelId": "3",
+      "password": "123456",
+      "age": "20",
+      "phone": "123456789"
+    },
+    {
+      "name": "Bob from Hallmark",
+      "gender": "M",
+      "birthDate": "01/01/2000",
+      "cpf": "21312312",
+      "rg": "123123123",
+      "maritalStatus": "single",
+      "phone": "51999136046",
+      "email": "edersons@hotmail.com",
+      "password": "11223344",
+      "naturalness": "123123123",
+      "cep": "88064400",
+      "street": "Rua Severino Firmino Martins",
+      "number": "611",
+      "city": "Florianópolis",
+      "state": "SC",
+      "complement": "",
+      "enrollments": [
+        "2",
+        "3"
+      ],
+      "papelId": "3",
+      "id": "2"
+    },
+    {
+      "id": "3",
+      "name": "Charlie from Essex",
+      "papelId": "3",
+      "password": "123456",
+      "age": "18",
+      "phone": "123456789"
+    },
+    {
+      "id": "4",
+      "name": "João de Ipatinga",
+      "papelId": "3",
+      "password": "123456",
+      "age": "20",
+      "phone": "123456789"
+    },
+    {
+      "id": "5",
+      "name": "Luiza de Gravatai",
+      "papelId": "3",
+      "password": "123456",
+      "age": "19",
+      "phone": "123456789"
+    },
+    {
+      "id": "6",
+      "name": "Helena de Troia",
+      "papelId": "3",
+      "password": "123456",
+      "age": "18",
+      "phone": "123456789"
+    },
+    {
+      "id": "7",
+      "name": "Svalta from Denmark",
+      "papelId": "3",
+      "password": "123456",
+      "age": "20",
+      "phone": "123456789"
+    },
+    {
+      "id": "8",
+      "name": "Sven from Denmark",
+      "papelId": "3",
+      "password": "123456",
+      "age": "19",
+      "phone": "123456789"
+    },
+    {
+      "id": "9",
+      "name": "Eder from São Leopoldo",
+      "papelId": "3",
+      "password": "123456",
+      "age": "18",
+      "phone": "123456789"
+    },
+    {
+      "name": "ZenaiZenai",
+      "gender": "M",
+      "birthDate": "11/11/1911",
+      "cpf": "12312312",
+      "rg": "123123123",
+      "maritalStatus": "single",
+      "phone": "12312312312",
+      "email": "email@email",
+      "password": "1122334455",
+      "naturalness": "brasileira",
+      "cep": "88064400",
+      "street": "Rua Severino Firmino Martins",
+      "number": "",
+      "city": "Florianópolis",
+      "state": "SC",
+      "complement": "",
+      "subjects": [
+        "1",
+        "2"
+      ],
+      "papelId": "2",
+      "id": "10"
+    },
+    {
+      "id": "11",
+      "name": "Principe Barundar Orcbane",
+      "papelId": "2",
+      "password": "112233"
+    },
+    {
+      "id": "12",
+      "name": "Conde Varian Jeggare",
+      "papelId": "2",
+      "password": "112233"
+    },
+    {
+      "id": "13",
+      "name": "narrador",
+      "papelId": "1",
+      "password": "1q2w3e"
+    },
+    {
+      "id": "7724",
+      "name": "Aluno EDERSON ",
+      "gender": "M",
+      "birthDate": "01/01/2000",
+      "cpf": "000.000.000-00",
+      "rg": "213123123123",
+      "maritalStatus": "single",
+      "phone": "51999136046",
+      "email": "edersons@hotmail.com",
+      "password": "11223344",
+      "naturalness": "Brasileira",
+      "cep": "88064400",
+      "street": "Rua Severino Firmino Martins",
+      "number": "611",
+      "city": "Florianópolis",
+      "state": "SC",
+      "complement": "",
+      "enrollments": [
+        "1",
+        "2"
+      ],
+      "papelId": "3"
+    },
+    {
+      "id": "63bf",
+      "name": "Geestão de vida",
+      "dateStart": "2020-01-01",
+      "dateEnd": "2020-05-05",
+      "timeStart": "06:00",
+      "teacher": "11",
+      "papelId": "2"
+    }
+  ],
+  "docente": [
+    {
+      "id": "1",
+      "usuarioId": "4"
+    },
+    {
+      "id": "2",
+      "usuarioId": "5"
+    },
+    {
+      "id": "3",
+      "usuarioId": "6"
+    }
+  ],
+  "materia": [
+    {
+      "id": "1",
+      "name": "Filosofia"
+    },
+    {
+      "id": "2",
+      "name": "Atletismo"
+    },
+    {
+      "id": "3",
+      "name": "Arcanismo"
+    }
+  ],
+  "curso": [
+    {
+      "id": "1",
+      "name": "Monge: Busca pela perfeição"
+    },
+    {
+      "id": "2",
+      "name": "Bárbaro: Raiva faz as coisas acontecerem"
+    },
+    {
+      "id": "3",
+      "name": "Mago: Engenharia do Universo"
+    }
+  ],
+  "turma": [
+    {
+      "id": "1",
+      "courseId": "1",
+      "subjectId": "1",
+      "name": "Turma A",
+      "cursoId": "1",
+      "teacherId": "10",
+      "studentIds": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "id": "2",
+      "courseId": "2",
+      "subjectId": "2",
+      "name": "Turma B",
+      "cursoId": "2",
+      "teacherId": "11",
+      "studentIds": [
+        "4",
+        "5",
+        "6"
+      ]
+    },
+    {
+      "id": "3",
+      "courseId": "3",
+      "subjectId": "3",
+      "name": "Turma C",
+      "cursoId": "3",
+      "teacherId": "12",
+      "studentIds": [
+        "7",
+        "8"
+      ]
+    },
+    {
+      "id": "4",
+      "courseId": "3",
+      "subjectId": "1",
+      "name": "Turma B",
+      "cursoId": "2",
+      "teacherId": "11",
+      "studentIds": [
+        "4",
+        "2",
+        "6"
+      ]
+    },
+    {
+      "name": "Gestão de Inimigos 5",
+      "dateStart": "2000-01-01",
+      "dateEnd": "2000-02-02",
+      "timeStart": "18:00",
+      "teacher": "11",
+      "id": "cf44"
+    },
+    {
+      "id": "1692",
+      "name": "Meditação",
+      "dateStart": "2000-01-01",
+      "dateEnd": "2000-01-01",
+      "timeStart": "05:00",
+      "teacher": "10"
+    },
+    {
+      "id": "ec00",
+      "name": "asdasdasd",
+      "dateStart": "2000-01-01",
+      "dateEnd": "2000-01-01",
+      "timeStart": "18:00",
+      "teacher": "11"
+    },
+    {
+      "id": "4663",
+      "name": "energias",
+      "dateStart": "2000-01-01",
+      "dateEnd": "2000-01-01",
+      "timeStart": "18:00",
+      "teacher": "12"
+    },
+    {
+      "id": "11a9",
+      "teacher": 11,
+      "enrollment": "cf44",
+      "discipline": "1",
+      "gradeName": "teste",
+      "gradeDate": "01012000",
+      "student": {
+        "id": "1",
+        "name": "Alice De Santiago",
+        "papelId": "3",
+        "password": "123456",
+        "age": "20",
+        "phone": "123456789"
+      },
+      "grade": 9
+    }
+  ],
+  "nota": [
+    {
+      "id": "1",
+      "usuarioId": "3",
+      "materiaId": "1",
+      "professorId": "10",
+      "name": "nota final",
+      "grade": "10",
+      "date": "01/10/2024"
+    },
+    {
+      "id": "2",
+      "usuarioId": "3",
+      "materiaId": "2",
+      "professorId": "10",
+      "name": "nota parcial 1",
+      "grade": "9",
+      "date": "01/10/2024"
+    },
+    {
+      "id": "3",
+      "usuarioId": "3",
+      "materiaId": "3",
+      "professorId": "10",
+      "name": "nota parcial 2",
+      "grade": "8",
+      "date": "01/10/2024"
+    },
+    {
+      "id": "8df1",
+      "teacher": 11,
+      "enrollment": "cf44",
+      "discipline": "1",
+      "gradeName": "teste",
+      "gradeDate": "01012000",
+      "student": {
+        "id": "1",
+        "name": "Alice De Santiago",
+        "papelId": "3",
+        "password": "123456",
+        "age": "20",
+        "phone": "123456789"
+      },
+      "grade": 9
+    }
+  ]
+}

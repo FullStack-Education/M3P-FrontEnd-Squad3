@@ -1,0 +1,119 @@
+$primary-color: #008585;
+$secondary-color: #809bce;
+$tertiary-color: #95b8d1;
+$quarternary-color: #b8e0d4;
+$quinary-color: #d6eadf;
+$sexenary-color: #e5c185;
+$septenary-color: #c7522a;
+
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Faz o container ocupar toda a altura da tela */
+  background: #fff;
+  background-color: $quarternary-color;
+}
+
+#student-listing {
+  background-color: $quarternary-color;
+}
+
+#welcome-toolbar{
+  background-color: $quarternary-color;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4rem;
+  align-items: center;
+  padding: 1rem 4rem 2rem 4rem;
+  background-color: $quarternary-color;
+  
+
+  margin-bottom: 2rem;
+  @media (max-width: 481px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .statistic-card {
+    border-radius: 8px;
+    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.4);
+    min-width: 12rem;
+    min-height: 6rem;
+    max-width: 20rem;
+    max-height: 12rem;
+    padding-top: 1rem;
+    align-items: center;
+    background-color: teal;
+    color: white;
+  }
+
+  .student-card {
+    border-radius: 8px;
+    box-shadow: 8px 8px 4px 0px rgba(0, 0, 0, 0.4);
+    min-width: 12rem;
+    min-height: 6rem;
+    max-width: 10rem;
+    padding-top: 1rem;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    border: 0.2rem solid teal;
+
+    img {
+      object-fit: cover;
+      width: 30%;
+      height: 30%;
+    }
+
+    mat-card-content {
+      margin: 0.5rem 0 0.5rem 0;
+      display: flex;
+      gap: 0.1rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        display: flex;
+        font-size: 1rem;
+        align-items: center;
+        gap: 0.2rem;
+      }
+
+      button {
+        width: 110%;
+        margin-top: 1rem;
+        background-color: teal;
+        color: white;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+        &:hover {
+          background-color: #25b6a5;
+        }
+      }
+    }
+  }
+}
+
+.mat-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 1rem 4rem 1rem 4rem;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  height: fit-content;
+  background-color: inherit;
+
+  mat-form-field {
+    margin-left: 2rem;
+    flex-grow: 1;
+  }
+}

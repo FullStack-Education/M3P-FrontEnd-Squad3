@@ -1,0 +1,58 @@
+$primary-color: #008585;
+$secondary-color: #809bce;
+$tertiary-color: #95b8d1;
+$quarternary-color: #b8e0d4;
+$quinary-color: #d6eadf;
+$sexenary-color: #e5c185;
+$septenary-color: #c7522a;
+
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+  background: #fff;
+  background-color: $quarternary-color;
+}
+
+
+.list-section {
+  margin: 0.5rem;
+  background-color: $quarternary-color;
+  display: flex;
+
+  .form-header {
+    padding: 1rem;
+    .form-title {
+      margin: 0;
+    }
+  }
+}
+
+.grade-list-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: $quarternary-color;
+}
+
+.grade-card-container {
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+mat-table {
+  width: 100%;
+}
+
+mat-header-cell, mat-cell {
+  padding: 8px;
+  text-align: center;
+}
+
+mat-header-row {
+  background-color: $primary-color;
+  color: white;
+}

@@ -1,0 +1,146 @@
+<!-- Deve conter um dropdown para a seleção de uma turma para a inclusão de uma avaliação e um formulário para cadastro das notas com botões editar, deletar e salvar.
+Essa tela só deverá ser acessada pelos usuários dos tipos Administradores e Docentes.
+Durante o cadastro, os botões de editar e deletar devem ficar desativados (desabilitados).
+Campos do formulário:
+(done) Professor: Obrigatório, dropdown com a listagem de professores cadastrados no portal.
+      Caso o usuário possua o perfil Administrador, deverão ser listados todos os professores/docentes cadastrados no sistema.
+      Caso o usuário possua o perfil Docente, o dropdown deverá vir preenchido com o nome do próprio usuário selecionado e não permitir alteração.
+(done) Nome da Matéria: Obrigatório, dropdown contendo as opções de matérias pré-setadas.
+
+(done) Nome da Avaliação: Obrigatório, campo de texto aberto para a inserção do nome da avaliação.
+(done)Data da Avaliação: Obrigatório, buscando horário atual do sistema e liberando para edição.
+(done) Aluno: Obrigatório, deve ser selecionado em um dropdown, pesquisável pelo nome do aluno, o aluno que receberá essa nota.
+Nota Avaliação: Obrigatório, numérico com o valor mínimo e máximo sendo 0 e 10.
+Deverá verificar os dados informados antes de cadastrar.
+Deverá criar um identificador único para cada avaliação/nota cadastrada.
+Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
+ -->
+
+<div class="grade-registration-container">
+  <div class="form-header">
+    <h2 class="form-title">Cadastro de Avaliação / Notas</h2>
+    <div class="form-actions">
+      <button
+        mat-icon-button
+        [disabled]="!(viewMode === 'read')"
+        (click)="enableEdit()"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        [disabled]="!(viewMode === 'read')"
+        (click)="onDelete()"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="gradeForm">
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Selecionar Turma</mat-label>
+        <mat-select
+          formControlName="enrollment"
+          (selectionChange)="onEnrollmentSelected()"
+        >
+          <mat-option
+            *ngFor="let enrollment of enrollments"
+            [value]="enrollment.id"
+          >
+            {{ enrollment.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <!-- Materia -->
+      <mat-form-field appearance="fill">
+        <mat-label>Matéria</mat-label>
+        <mat-select formControlName="discipline">
+          <mat-option
+            *ngFor="let discipline of disciplines"
+            [value]="discipline.id"
+          >
+            {{ discipline.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Professor -->
+      <mat-form-field appearance="fill">
+        <mat-label>Professor</mat-label>
+        <mat-select formControlName="teacher">
+          <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+            {{ teacher.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <!-- Disciplina -->
+      <mat-form-field appearance="fill">
+        <mat-label>Nome da Avaliação</mat-label>
+        <input matInput formControlName="gradeName" />
+      </mat-form-field>
+
+      <!-- Data da Avaliação -->
+      <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        
+        <input 
+          matInput 
+          formControlName="gradeDate" 
+          mask="d0/M0/0000" 
+          [showMaskTyped]="true"
+        />
+        <mat-hint>DD/MM/YYYY</mat-hint>
+      </mat-form-field>
+
+      
+      <mat-form-field class="example-full-width">
+        <mat-label>Aluno</mat-label>
+        <input type="text" matInput formControlName="student" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStudentsFn">
+          <mat-option *ngFor="let student of filteredStudents | async" [value]="student">
+            {{ student.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      
+      <mat-form-field appearance="fill">
+        <mat-label>Nota Avaliação</mat-label>
+        <input
+          matInput
+          formControlName="grade"
+          type="number"
+          min="0"
+          max="10"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="form-footer">
+      <button
+        *ngIf="viewMode !== 'read'"
+        mat-raised-button
+        color="primary"
+        (click)="cancelEdit()"
+      >
+        Cancelar
+      </button>
+      <button
+        *ngIf="viewMode !== 'read'"
+        mat-raised-button
+        color="primary"
+        (click)="onSave()"
+      >
+        Salvar
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,40 @@
+$primary-color: #008585;
+$secondary-color: #809bce;
+$tertiary-color: #95b8d1;
+$quarternary-color: #b8e0d4;
+$quinary-color: #d6eadf;
+$sexenary-color: #e5c185;
+$septenary-color: #c7522a;
+
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  color: $primary-color;
+  border-bottom: 1px solid $primary-color;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .app-logo {
+    margin-left: 0.5rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-left: 8px;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+<div class="enrollment-form">
+  <div class="form-header">
+    <h2 class="form-title">Cadastro de Turma</h2>
+    <div class="form-actions">
+      <button mat-icon-button  [disabled]="!(viewMode === 'read')" (click)="enableEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button [disabled]="!(viewMode === 'read')" (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="enrollmentForm">
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Professor</mat-label>
+        <mat-select formControlName="teacher">
+          <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+            {{ teacher.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field class="full-width">
+        <mat-label>Nome da turma</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Data de inicio</mat-label>
+        <input type="date" matInput formControlName="dateStart" placeholder="dd/mm/yyyy" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Data de termino</mat-label>
+        <input type="date" matInput formControlName="dateEnd" placeholder="dd/mm/yyyy" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field id="time-end-field">
+        <mat-label>Horário</mat-label>
+        <input type="time" matInput formControlName="timeStart" placeholder="hh:mm" />
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div class="form-footer">
+    <button *ngIf="viewMode !== 'read'" mat-raised-button color="primary" (click)="cancelEdit()">Cancelar</button>
+    <button *ngIf="viewMode !== 'read'" mat-raised-button color="primary" (click)="onSave()">Salvar</button>
+  </div>
+</div>

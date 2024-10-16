@@ -1,0 +1,34 @@
+<div class="list-section">
+  <div class="form-header">
+    <h2 class="form-title">Lista de notas</h2>
+  </div>
+</div>
+<div class="grade-list-container">
+  <mat-card class="grade-card-container">
+    <mat-table [dataSource]="filteredGrades" class="mat-elevation-z8">
+    
+      <ng-container matColumnDef="materiaName">
+        <mat-header-cell *matHeaderCellDef> Matéria </mat-header-cell>
+        <mat-cell *matCellDef="let grade"> {{ grade.materiaName }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Avaliação </mat-header-cell>
+        <mat-cell *matCellDef="let grade"> {{ grade.name }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="grade">
+        <mat-header-cell *matHeaderCellDef> Nota </mat-header-cell>
+        <mat-cell *matCellDef="let grade"> {{ grade.grade }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
+        <mat-cell *matCellDef="let grade"> {{ grade.date | date:'dd/MM/yyyy' }} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card>
+</div>

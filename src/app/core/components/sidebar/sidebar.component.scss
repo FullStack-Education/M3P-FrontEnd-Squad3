@@ -1,0 +1,76 @@
+$primary-color: teal;
+$secondary-color: #809bce;
+$tertiary-color: #95b8d1;
+$quarternary-color: #b8e0d4;
+
+
+.sidenav-container {
+  height: 100%;
+}
+
+
+
+.sidenav {
+  background: $tertiary-color;
+  color: white;
+  transition: width 0.3s ease;
+  border-radius: 0;;
+}
+
+#sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  h3, h4, h2 {
+    padding: 0 0.5rem 0 0 ;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.mat-sidenav-content {
+  padding: 10px;
+  width: 100%;
+  transition: margin-left 0.3s ease;
+  background: $secondary-color;
+}
+
+.mat-sidenav-content.hidden-content {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.mat-sidenav-container .mat-sidenav {
+  width: 250px; 
+}
+
+.mat-sidenav-container .mat-sidenav.mat-sidenav-closed {
+  width: 70px; 
+}
+
+mat-list-item {
+  padding: 0.2rem;
+  margin: 0.5rem;
+  width: 95%;
+  
+  button {
+    width: 90%;
+    border-radius: 12px;
+    border-color: black;
+    display: flex;
+    padding: 0.3rem;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.mat-list-item mat-icon {
+  margin-right: 16px;
+}
+
+ mat-divider {
+  margin: 1rem 0 1rem 0;
+ }

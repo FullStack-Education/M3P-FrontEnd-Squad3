@@ -1,0 +1,122 @@
+<section id="student-grades" *ngIf="isCurrentUserStudent()">
+  <mat-toolbar class="mat-toolbar">
+    <h3>Minhas Avaliações</h3>
+  </mat-toolbar>
+  <div class="card-container">
+    <mat-card *ngFor="let grade of studentGrades" class="student-card" (click)="onViewGradeDetails(grade.id)">
+      <mat-card-header>
+        <mat-card-title>{{ grade.materiaName }}</mat-card-title>
+        <mat-card-subtitle> <p>Nota: {{ grade.grade }}</p></mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        data: {{ grade.date || null }}
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+<section id="minhas-materias" *ngIf="isCurrentUserStudent()">
+  <mat-toolbar class="mat-toolbar">
+    <h3>Minhas Turmas / Matérias</h3>
+  </mat-toolbar>
+  <div class="card-container">
+    <mat-card *ngFor="let enrollment of studentEnrollments" class="student-card">
+      <mat-card-header>
+        <mat-card-title>Turma</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>{{ enrollment.name }}</mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+<section id="disciplinas-extras" *ngIf="isCurrentUserStudent()">
+  <mat-toolbar class="mat-toolbar">
+    <h3>Disciplinas Extras</h3>
+  </mat-toolbar>
+  <div class="card-container">
+    <mat-card *ngFor="let extraSubject of extraSubjects" class="student-card">
+      <mat-card-header>
+        <mat-card-title>{{ extraSubject }}</mat-card-title>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</section>
+
+<section id="statistics" *ngIf="isCurrentUserAdmin()" >
+  <mat-toolbar id="welcome-toolbar" class="mat-toolbar">
+    <h3>Estatisticas</h3>
+  </mat-toolbar>
+
+  <div class="card-container">
+    <mat-card *ngFor="let statistic of statistics" class="statistic-card">
+      <mat-card-header>
+        <mat-card-title>{{ statistic.title }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ statistic.detail }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+<section id="student-listing" *ngIf="isCurrentUserAdmin() || isCurrentUserTeacher()">
+  <mat-toolbar class="mat-toolbar">
+    <mat-form-field appearance="fill">
+      <mat-label>Pesquisar aluno:</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="studentSearchTerm"
+        placeholder="Buscar..."
+        (ngModelChange)="onSearch()"
+      />
+      <mat-icon
+        matSuffix
+        (click)="onSearch()"
+        aria-hidden="false"
+        aria-label="Pesquisar alunos"
+        >search</mat-icon
+      >
+    </mat-form-field>
+  </mat-toolbar>
+  <div id="student-card-container" class="card-container">
+    <mat-card *ngFor="let student of students" class="student-card">
+      <img
+        mat-card-image
+        src="{{ student.image || 'assets/avatar.png' }}"
+        alt="Photo of {{ student.name }}"
+      />
+      <mat-card-header>
+        <mat-card-title>{{ student.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        {{ student.age }} anos
+        <span
+          ><mat-icon
+            mat-icon-button
+            aria-hidden="false"
+            aria-label="phone"
+            fontIcon="phone"
+          ></mat-icon>
+          {{ student.phone }}</span
+        >
+        <button *ngIf="isCurrentUserAdmin()" 
+          mat-stroked-button 
+          aria-label="Ver mais" 
+          [routerLink]="['/student']"
+          [queryParams] = "{ id: student.id }">
+          ver mais
+        </button>
+
+        <button 
+          *ngIf="isCurrentUserTeacher()" 
+          mat-stroked-button 
+          aria-label="Ver mais" 
+          [routerLink]="['/grade']"
+          [queryParams] = "{ studentId : student.id}" >
+          lançar nota
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

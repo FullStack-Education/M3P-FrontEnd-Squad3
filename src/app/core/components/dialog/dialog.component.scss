@@ -1,0 +1,48 @@
+h1 {
+  font-size: 1rem;
+}
+
+:host {
+  display: block;
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 500px;
+  animation: custom-dialog-enter 1s ease;
+}
+
+#dialog_message {
+  padding: 1rem;
+  background-color: #f8f9fa;
+}
+
+
+#footer {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.2rem;
+  padding-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  justify-items: right;
+  align-items: flex-end;
+  
+}
+
+input {
+  margin: 8px 0;
+}
+
+button + button {
+  margin-left: 8px;
+}
+
+@keyframes custom-dialog-enter {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: none;
+  }
+}
