@@ -14,39 +14,51 @@ import { TeacherListComponent } from './features/teacher-list/teacher-list.compo
 import { EnrollmentComponent } from './features/enrollment/enrollment.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'unauthenticated', component: LoginComponent },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'login', 
+    component: LoginComponent 
+  },
+  { path: 'unauthenticated', 
+    component: LoginComponent 
+  },
+  { path: '', 
+    redirectTo: 'login', 
+    pathMatch: 'full' 
+  },
+  { path: 'home', 
+    component: HomeComponent, 
+    canActivate: [AuthGuard] 
+  },
   {
     path: 'teacher',
     component: TeacherComponent,
-    canActivate: [AuthGuard] && [AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: 'enrollment',
     component: EnrollmentComponent,
-    canActivate: [AuthGuard] && [AdminOrTeacherGuard],
+    canActivate: [AuthGuard, AdminOrTeacherGuard],
   },
   {
     path: 'grade-list',
     component: GradeListComponent,
-    canActivate: [AuthGuard] && [isStudentGuard],
+    canActivate: [AuthGuard, isStudentGuard],
   },
   {
     path: 'student',
     component: StudentComponent,
-    canActivate: [AuthGuard] && [AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: 'grade',
     component: GradeComponent,
-    canActivate: [AuthGuard] && [AdminOrTeacherGuard],
+    canActivate: [AuthGuard, AdminOrTeacherGuard],
   },
   {
     path: 'teacher-list',
     component: TeacherListComponent,
-    canActivate: [AuthGuard] && [AdminGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
-  { path: '**', redirectTo: '/home' },
+  { path: '**', 
+    redirectTo: '/login' 
+  },
 ];

@@ -2,8 +2,10 @@
   <span>{{ pageTitle }}</span>
   <img src="assets/favicon.ico" alt="logo" class="app-logo">
   <span class="spacer"></span>
+  @if (user) {
   <span class="user-info">
     <span>{{ user?.name }} ({{user?.role?.name}})</span>
     <img src="assets/avatar.png" alt="User Avatar" class="user-avatar">
   </span>
+}
 </mat-toolbar>
