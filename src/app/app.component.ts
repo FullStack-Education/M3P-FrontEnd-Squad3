@@ -23,6 +23,6 @@ export class AppComponent {
   constructor(private router: Router) {}
 
   isLoginPage(): boolean {
-    return this.router.url === '/login';
+    return this.router.url === '/login' || this.router.url ==='/unauthenticated';
   }
 }
