@@ -15,8 +15,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  signIn(username: string, password: string): Observable<IUser | null> {    
-    const userWithRole = this.findUser(username, password).pipe(
+  signIn(email: string, password: string): Observable<IUser | null> {    
+    const userWithRole = this.findUser(email, password).pipe(
       switchMap((user) => (user ? this.fetchUserRole(user) : of(null))),
       catchError((error) => {
         console.error('Error during sign-in process:', error);
@@ -32,14 +32,14 @@ export class AuthService {
   }
 
   private findUser(
-    username: string,
+    email: string,
     password: string
   ): Observable<IUser | null> {
     return this.http.get<IUser[]>(this.apiUsersUrl).pipe(
       map(
         (users) => {
           return users.find(
-            (user) => user.name === username && user.password === password
+            (user) => user.email === email && user.password === password
           ) || null
         }
       ),

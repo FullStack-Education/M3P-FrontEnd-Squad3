@@ -17,10 +17,11 @@
     {
       "id": "1",
       "name": "Alice De Santiago",
-      "papelId": "3",
+      "papelId": "1",
       "password": "123456",
       "age": "20",
-      "phone": "123456789"
+      "phone": "123456789",
+      "email":"admin@email"
     },
     {
       "name": "Bob from Hallmark",
