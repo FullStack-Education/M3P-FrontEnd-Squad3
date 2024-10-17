@@ -24,21 +24,21 @@ import { IUser } from '../../core/interfaces/user.interface';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = '';
   password: string = '';
   loginForm: FormGroup;
   formFields = [
     {
-      id: 'username_div',
-      name: 'username',
+      id: 'email_div',
+      name: 'email',
       label: 'Email',
-      type: 'text',
-      model: this.username,
+      type: 'email',
+      model: this.email,
       errors: [
         { type: 'required', message: 'Email é um campo obrigatório.' },
         {
-          type: 'minlength',
-          message: 'Email deve conter ao menos 3 caracteres.',
+          type: 'email',
+          message: 'Por favor insira um email válido.',
         },
       ],
     },
@@ -79,15 +79,15 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   signIn() {
-    const { username, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
     this.authService
-      .signIn(username, password)
+      .signIn(email, password)
       .subscribe((user: IUser | null) => {
         if (user) {
           this.snackBar.open(
