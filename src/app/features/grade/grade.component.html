@@ -52,6 +52,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             {{ enrollment.name }}
           </mat-option>
         </mat-select>
+        @if (hasError("enrollment")) {
+          <mat-error>{{ getError("enrollment") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -67,6 +70,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             {{ discipline.name }}
           </mat-option>
         </mat-select>
+        @if (hasError("discipline")) {
+          <mat-error>{{ getError("discipline") }}</mat-error>
+        }
       </mat-form-field>
 
       <!-- Professor -->
@@ -77,6 +83,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             {{ teacher.name }}
           </mat-option>
         </mat-select>
+        @if (hasError("teacher")) {
+          <mat-error>{{ getError("teacher") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -85,6 +94,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
       <mat-form-field appearance="fill">
         <mat-label>Nome da Avaliação</mat-label>
         <input matInput formControlName="gradeName" />
+        @if (hasError("gradeName")) {
+          <mat-error>{{ getError("gradeName") }}</mat-error>
+        }
       </mat-form-field>
 
       <!-- Data da Avaliação -->
@@ -98,6 +110,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
           [showMaskTyped]="true"
         />
         <mat-hint>DD/MM/YYYY</mat-hint>
+        @if (hasError("gradeDate")) {
+          <mat-error>{{ getError("gradeDate") }}</mat-error>
+        }
       </mat-form-field>
 
       
@@ -109,6 +124,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             {{ student.name }}
           </mat-option>
         </mat-autocomplete>
+        @if (hasError("student")) {
+          <mat-error>{{ getError("student") }}</mat-error>
+        }
       </mat-form-field>
 
       
@@ -121,6 +139,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
           min="0"
           max="10"
         />
+        @if (hasError("grade")) {
+          <mat-error>{{ getError("grade") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
