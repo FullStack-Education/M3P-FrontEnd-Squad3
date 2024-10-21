@@ -15,6 +15,7 @@ import { AuthService} from '../../core/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { IUser } from '../../core/interfaces/user.interface';
+import { FormValidationService } from '../../core/services/form-validation.service';
 
 @Component({
   selector: 'app-login',
@@ -75,6 +76,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private dialog: Dialog,
     private authService: AuthService,
+    private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {
@@ -112,10 +114,6 @@ export class LoginComponent {
     return field?.invalid && field.touched;
   }
 
-  hasError(fieldName: string, errorType: string): boolean {
-    return this.loginForm.get(fieldName)?.hasError(errorType) || false;
-  }
-
   forgotPassword() {
     const dialogRef = this.dialog.open<IDialogData>(DialogComponent, {
       minWidth: '300px',
@@ -134,5 +132,13 @@ export class LoginComponent {
         actions: [{ label: 'OK', action: 'close', visible: true }],
       },
     });
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.loginForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.loginForm, inputName);
   }
 }
