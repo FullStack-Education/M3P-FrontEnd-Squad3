@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { IUser } from '../../core/interfaces/user.interface';
+import { FormValidationService } from '../../core/services/form-validation.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -55,6 +56,7 @@ export class EnrollmentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute,
@@ -89,11 +91,8 @@ export class EnrollmentComponent implements OnInit {
           Validators.maxLength(64),
         ],
       ],
-      dateStart: ['', Validators.required],
-      dateEnd: [
-        '',
-        [Validators.required],
-      ],
+      dateStart: ['', [Validators.required, this.dateValidator]],
+      dateEnd: ['', [Validators.required, this.dateValidator]],
       timeStart: [
         '',
         [
@@ -112,6 +111,19 @@ export class EnrollmentComponent implements OnInit {
     this.enrollmentService.getEnrollmentById(enrollmentId).subscribe((enrollment) => {
       this.enrollmentForm.patchValue(enrollment);
     });
+  }
+
+  dateValidator(control: FormControl) {
+    if (!control.value) return null;
+
+    const timestamp = Date.parse(control.value);
+    if (isNaN(timestamp)) return { invalidFormat: true };
+
+    const diffTime = (Date.now() - timestamp) / 1000;
+    const minDateDiffInSeconds = 30 * 365 * 24 * 60 * 60;
+
+    // Success if the date started up to 30 years ago or in the future
+    return diffTime > minDateDiffInSeconds ? { invalidDate: true } : null;
   }
 
   onSave() {
@@ -168,5 +180,13 @@ export class EnrollmentComponent implements OnInit {
 
   isCurrentUserTeacher(): boolean {
     return this.authService.isTeacher();
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.enrollmentForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.enrollmentForm, inputName);
   }
 }

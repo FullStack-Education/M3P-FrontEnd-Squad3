@@ -12,9 +12,11 @@
             [ngClass]="{'invalid-input': isInvalid(field.name)}"
           />
           <div *ngIf="isInvalid(field.name)" class="error-message">
-            <span *ngFor="let error of field.errors">
-              {{ error.message }}
-            </span>
+            @if (hasError(field.name)) {
+              <span>
+                {{ getError(field.name) }}
+              </span>
+            }
           </div>
         </div>
       </ng-container>

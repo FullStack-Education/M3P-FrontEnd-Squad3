@@ -26,6 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
 import { StudentService, IStudentEnrollment } from '../../core/services/student.service';
+import { FormValidationService } from '../../core/services/form-validation.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -60,6 +61,7 @@ export class StudentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
     private viaCepService: ViaCepService,
     private studentService: StudentService,
@@ -95,10 +97,17 @@ export class StudentComponent implements OnInit {
       ],
       gender: ['', Validators.required],
       birthDate: ['', [Validators.required, this.dateValidator]],
-      cpf: ['', [Validators.required, this.cpfValidator]],
+      cpf: ['', [
+        Validators.required, 
+        (control: FormControl) => this.formValidationService.requireNumberLength(11, control),
+        this.cpfValidator
+      ]],
       rg: ['', [Validators.required, Validators.maxLength(20)]],
       maritalStatus: ['', Validators.required],
-      phone: ['', [Validators.required, this.phoneValidator]],
+      phone: ['', [
+        Validators.required, 
+        (control: FormControl) => this.formValidationService.requireNumberLength(11, control)
+      ]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       naturalness: [
@@ -109,7 +118,10 @@ export class StudentComponent implements OnInit {
           Validators.maxLength(64),
         ],
       ],
-      cep: ['', [Validators.required, Validators.minLength(8)]],
+      cep: ['', [
+        Validators.required,
+        (control: FormControl) => this.formValidationService.requireNumberLength(8, control)
+      ]],
       street: [{ value: '', disabled: true }],
       number: [''],
       city: [{ value: '', disabled: true }],
@@ -129,13 +141,35 @@ export class StudentComponent implements OnInit {
   }
 
   cpfValidator(control: FormControl) {
-    /* const cpf = control.value;
-    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-    if (!cpfRegex.test(cpf)) {
-      return { invalidCpf: true };
+    const cpf: string = control.value;
+
+    const numbers: number[] = cpf.split('')
+      .map(char => Number.parseInt(char))
+      .filter(number => !Number.isNaN(number));
+
+    const firstNums = numbers.slice(0, 9);
+
+    {
+      const sum = firstNums.reduce((accumulator, currVal, idx) => accumulator + currVal * (10 - idx), 0);
+      const firstControlDigit = 11 - (sum % 11);
+      if (firstControlDigit != numbers.at(-2))
+        return { invalidCpf: true };
+
+      firstNums.push(firstControlDigit);
     }
-    return null; */
+
+    {
+      const sum = firstNums.reduce(
+        (accumulator, currVal, idx) => accumulator + currVal * (11 - idx), 0
+      );
+      const secondControlDigit = 11 - (sum % 11);
+      if (secondControlDigit != numbers.at(-1))
+        return { invalidCpf: true };
+    }
+
+    return null;
   }
+
   dateValidator(control: FormControl) {
     /* const date = control.value;
     const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -144,12 +178,22 @@ export class StudentComponent implements OnInit {
     }
     return null; */
   }
-  phoneValidator(control: FormControl) {}
 
   onCepBlur() {
-    const cep = this.studentForm.get('cep')?.value;
-    this.viaCepService.getAddressByCep(cep).subscribe((address) => {
+    const cepInput = this.studentForm.get('cep');
+    if (!cepInput || cepInput.invalid) {
+      return;
+    }
+    this.viaCepService.getAddressByCep(cepInput.value).subscribe((address) => {
       console.log('address', address);
+
+      if ('erro' in address) {
+        cepInput?.setErrors({ invalid: true });
+        this.snackBar.open('CEP informado não existe!', 'Fechar', {
+          duration: 3000,
+        });
+        return;
+      }
 
       this.studentForm.patchValue({
         city: address.localidade,
@@ -210,5 +254,13 @@ export class StudentComponent implements OnInit {
       });
       this.studentForm.reset();
     });
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.studentForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.studentForm, inputName);
   }
 }

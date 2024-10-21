@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { EnrollmentService, IDisciplines, IEnrollmentClass } from '../../core/services/enrollment.service';
 import { StudentService } from '../../core/services/student.service';
@@ -24,6 +24,7 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import moment from 'moment';
 import { map, Observable, startWith } from 'rxjs';
 import { GradeService } from '../../core/services/grade.service';
+import { FormValidationService } from '../../core/services/form-validation.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 @Component({
@@ -62,6 +63,7 @@ export class GradeComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private formValidationService: FormValidationService,
     private enrollmentService: EnrollmentService,
     private studentService: StudentService,
     private authService: AuthService,
@@ -74,7 +76,7 @@ export class GradeComponent implements OnInit {
       enrollment: ['', Validators.required],
       discipline: ['', Validators.required],
       gradeName: ['', Validators.required],
-      gradeDate: ['', Validators.required],
+      gradeDate: ['', [Validators.required, this.dateValidator]],
       student: ['', Validators.required],
       grade: ['', [Validators.required, Validators.min(0), Validators.max(10)]],
     });
@@ -157,6 +159,19 @@ export class GradeComponent implements OnInit {
     // Handle class selection if necessary
   }
 
+  dateValidator(control: FormControl) {
+    if (!control.value) return null;
+
+    const timestamp = Date.parse(control.value);
+    if (isNaN(timestamp)) return { invalidFormat: true };
+
+    const diffTime = (Date.now() - timestamp) / 1000;
+    const ageInSeconds = 140 * 365 * 24 * 60 * 60;
+
+    // Check if the date is beyond a reasonable range (140 years old) or in the future
+    return diffTime > ageInSeconds || diffTime < 0 ? { invalidDate: true } : null;
+  }
+
   onSave() {
     if (this.gradeForm.invalid) {
       this.gradeForm.markAllAsTouched(this.gradeForm.controls);
@@ -213,5 +228,13 @@ export class GradeComponent implements OnInit {
 
   displayStudentsFn(student: IUser): string {
     return student && student.name ? student.name : '';
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.gradeForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.gradeForm, inputName);
   }
 }
