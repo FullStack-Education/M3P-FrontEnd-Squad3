@@ -17,6 +17,7 @@ import {
 import { UserService } from '../../core/services/user.service';
 import { EnrollmentService, IEnrollmentClass } from '../../core/services/enrollment.service';
 import { IUser } from '../../core/interfaces/user.interface';
+import { ICourse } from '../../core/interfaces/course.interface'; 
 
 @Component({
   selector: 'app-home',
@@ -44,7 +45,7 @@ export class HomeComponent {
   teachers = [] as IUser[];
   studentGrades = [] as IStudentGrade[];
   studentEnrollments = [] as IEnrollmentClass[];
-  extraSubjects = ['Matemática', 'Química', 'Física']; // Mocks para materias extras
+  extraSubjects = [] as ICourse[];
 
   constructor(
     private authService: AuthService,
@@ -75,12 +76,24 @@ export class HomeComponent {
             enrollment.courseName = courseName; 
           });
         });
+
+        this.enrollmentService.getCourses().subscribe((courses) => {
+          this.extraSubjects = courses.filter(course => {
+            return !this.studentEnrollments.some(enrollment => enrollment.courseId === course.id);
+          });
+        });
       });
     this.studentService
       .getGradesByOrder(this.currentUser!.id, 'desc', 3)
       .subscribe((grades) => {
         this.studentGrades = grades;
       });
+  }
+
+  loadCourses() {
+    this.enrollmentService.getCourses().subscribe((courses) => {
+      this.extraSubjects = courses; 
+    });
   }
 
   loadAdminData() {
