@@ -27,6 +27,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
 import { StudentService, IStudentEnrollment } from '../../core/services/student.service';
 import { FormValidationService } from '../../core/services/form-validation.service';
+import { NgxMaskDirective } from 'ngx-mask';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -47,6 +48,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
     MatOptionModule,
     MatIconModule,
     MatDatepickerModule,
+    NgxMaskDirective
   ],
 })
 export class StudentComponent implements OnInit {

@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
 import { FormValidationService } from '../../core/services/form-validation.service';
+import { NgxMaskDirective } from 'ngx-mask';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -35,7 +36,8 @@ type typeViewMode = 'read' | 'insert' | 'edit';
     MatFormFieldModule,
     MatOptionModule,
     MatIconModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    NgxMaskDirective
   ],
 })
 export class TeacherComponent implements OnInit {
@@ -163,9 +165,11 @@ export class TeacherComponent implements OnInit {
   }
 
   dateValidator(control: FormControl) {
-    if (!control.value) return null;
+    const value: string = control.value;
+    if (!value) return null;
 
-    const timestamp = Date.parse(control.value);
+    // Transform the format dd/MM/yyyy (input's default) to MM/dd/yyyy
+    const timestamp = Date.parse(`${value.substring(2, 4)}/${value.substring(0, 2)}/${value.substring(4)}`);
     if (isNaN(timestamp)) return { invalidFormat: true };
 
     const diffTime = (Date.now() - timestamp) / 1000;
