@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { ICourse } from '../interfaces/course.interface';
 
 export interface IEnrollmentClass {
   id: string;
@@ -9,6 +10,7 @@ export interface IEnrollmentClass {
   studentIds?: string[]; 
   subjectId?: string;
   courseId: string;
+  courseName: string;
 }
 export interface IDisciplines{
   id: string;
@@ -22,6 +24,7 @@ export interface IDisciplines{
 export class EnrollmentService {
   private apiUrl = 'http://localhost:3000/turma';
   private disciplinesApiUrl = 'http://localhost:3000/materia';
+  private coursesApiUrl = 'http://localhost:3000/curso';
 
   constructor(private http: HttpClient) {}
 
@@ -73,6 +76,18 @@ export class EnrollmentService {
           
           return response;
         });
+      })
+    );
+  }
+  getCourses(): Observable<ICourse[]> {
+    return this.http.get<ICourse[]>(this.coursesApiUrl);
+  }
+
+  getCourseNameById(courseId: string): Observable<string> {
+    return this.getCourses().pipe(
+      map((courses) => {
+        const course = courses.find(c => c.id === courseId);
+        return course ? course.name : 'Curso Desconhecido';
       })
     );
   }
