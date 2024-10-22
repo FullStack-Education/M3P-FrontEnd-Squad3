@@ -69,7 +69,7 @@ export class StudentComponent implements OnInit {
     private studentService: StudentService,
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     const paramStudentId = this.route.snapshot.queryParamMap.get('id');
@@ -99,17 +99,10 @@ export class StudentComponent implements OnInit {
       ],
       gender: ['', Validators.required],
       birthDate: ['', [Validators.required, this.dateValidator]],
-      cpf: ['', [
-        Validators.required, 
-        (control: FormControl) => this.formValidationService.requireNumberLength(11, control),
-        this.cpfValidator
-      ]],
+      cpf: ['', [Validators.required, this.formValidationService.requireNumberLength(11), this.cpfValidator]],
       rg: ['', [Validators.required, Validators.maxLength(20)]],
       maritalStatus: ['', Validators.required],
-      phone: ['', [
-        Validators.required, 
-        (control: FormControl) => this.formValidationService.requireNumberLength(11, control)
-      ]],
+      phone: ['', [Validators.required, (control: FormControl) => this.formValidationService.requireNumberLength(11)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       naturalness: [
@@ -120,10 +113,7 @@ export class StudentComponent implements OnInit {
           Validators.maxLength(64),
         ],
       ],
-      cep: ['', [
-        Validators.required,
-        (control: FormControl) => this.formValidationService.requireNumberLength(8, control)
-      ]],
+      cep: ['', [Validators.required, this.formValidationService.requireNumberLength(8)]],
       street: [{ value: '', disabled: true }],
       number: [''],
       city: [{ value: '', disabled: true }],
