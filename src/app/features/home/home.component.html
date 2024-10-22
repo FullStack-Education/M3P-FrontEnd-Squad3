@@ -31,12 +31,12 @@
 
 <section id="disciplinas-extras" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Disciplinas Extras</h3>
+    <h3>Cursos Extras Disponíveis</h3>
   </mat-toolbar>
   <div class="card-container">
-    <mat-card *ngFor="let extraSubject of extraSubjects" class="student-card">
+    <mat-card *ngFor="let course of extraSubjects" class="student-card">
       <mat-card-header>
-        <mat-card-title>{{ extraSubject }}</mat-card-title>
+        <mat-card-title>{{ course.name }}</mat-card-title>
       </mat-card-header>
     </mat-card>
   </div>
