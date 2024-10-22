@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
 import { FormValidationService } from '../../core/services/form-validation.service';
+import { NgxMaskDirective } from 'ngx-mask';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -35,7 +36,8 @@ type typeViewMode = 'read' | 'insert' | 'edit';
     MatFormFieldModule,
     MatOptionModule,
     MatIconModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    NgxMaskDirective
   ],
 })
 export class TeacherComponent implements OnInit {
@@ -86,17 +88,10 @@ export class TeacherComponent implements OnInit {
       ],
       gender: ['', Validators.required],
       birthDate: ['', [Validators.required, this.dateValidator]],
-      cpf: ['', [
-        Validators.required,
-        (control: FormControl) => this.formValidationService.requireNumberLength(11, control),
-        this.cpfValidator
-      ]],
+      cpf: ['', [Validators.required, this.formValidationService.requireNumberLength(11), this.cpfValidator]],
       rg: ['', [Validators.required, Validators.maxLength(20)]],
       maritalStatus: ['', Validators.required],
-      phone: ['', [
-        Validators.required,
-        (control: FormControl) => this.formValidationService.requireNumberLength(11, control)
-      ]],
+      phone: ['', [Validators.required, this.formValidationService.requireNumberLength(11)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       naturalness: [
@@ -107,10 +102,7 @@ export class TeacherComponent implements OnInit {
           Validators.maxLength(64),
         ],
       ],
-      cep: ['', [
-        Validators.required, 
-        (control: FormControl) => this.formValidationService.requireNumberLength(8, control)
-      ]],
+      cep: ['', [Validators.required, this.formValidationService.requireNumberLength(8)]],
       street: [{ value: '', disabled: true }],
       number: [''],
       city: [{ value: '', disabled: true }],
@@ -163,9 +155,11 @@ export class TeacherComponent implements OnInit {
   }
 
   dateValidator(control: FormControl) {
-    if (!control.value) return null;
+    const value: string = control.value;
+    if (!value) return null;
 
-    const timestamp = Date.parse(control.value);
+    // Transform the format dd/MM/yyyy (input's default) to MM/dd/yyyy
+    const timestamp = Date.parse(`${value.substring(2, 4)}/${value.substring(0, 2)}/${value.substring(4)}`);
     if (isNaN(timestamp)) return { invalidFormat: true };
 
     const diffTime = (Date.now() - timestamp) / 1000;

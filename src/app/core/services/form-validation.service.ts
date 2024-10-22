@@ -50,22 +50,26 @@ export class FormValidationService {
 
   public inputHasError(formGroup: FormGroup, inputName: string): boolean {
     const inputControl = formGroup.controls[inputName];
-    
+
     return (inputControl.dirty || inputControl.touched) && inputControl.invalid;
   }
 
-  public requireLength(length: number, control: FormControl) {
-    if (!control.value) return;
-    if (control.value.length != length)
-      return { length: length };
-    return;
+  public requireLength(length: number) {
+    return (control: FormControl) => {
+      if (!control.value) return;
+      if (control.value.length != length)
+        return { length: length };
+      return;
+    }
   }
 
-  public requireNumberLength(length: number, control: FormControl) {
-    const value: string = control.value;
-    if (!value) return;
-    if (value.replaceAll(/\D/g, '').length != length)
-      return { numberLength: length };
-    return;
+  public requireNumberLength(length: number) {
+    return (control: FormControl) => {
+      const value: string = control.value;
+      if (!value) return;
+      if (value.replaceAll(/\D/g, '').length != length)
+        return { numberLength: length };
+      return;
+    }
   }
 }

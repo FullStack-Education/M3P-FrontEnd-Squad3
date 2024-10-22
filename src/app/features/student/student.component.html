@@ -21,7 +21,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Telefone</mat-label>
-        <input matInput formControlName="phone" placeholder="(00) 98765-4321"/>
+        <input matInput formControlName="phone" mask="(00) 00000-0000" shownMaskExpression="(__) _____-____" [showMaskTyped]="true"/>
         @if (hasError("phone")) {
           <mat-error>{{ getError("phone") }}</mat-error>
         }
@@ -53,7 +53,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Data de Nascimento</mat-label>
-        <input matInput formControlName="birthDate" placeholder="dd/mm/yyyy" />
+        <input matInput formControlName="birthDate" mask="d0/M0/0000" placeholder="dd/MM/yyyy"/>
         @if (hasError("birthDate")) {
           <mat-error>{{ getError("birthDate") }}</mat-error>
         }
@@ -82,7 +82,7 @@
     <div class="form-row">
       <mat-form-field>
         <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" placeholder="123.456.789-01"/>
+        <input matInput formControlName="cpf" mask="000.000.000-00" shownMaskExpression="___.___.___-__" [showMaskTyped]="true"/>
         @if (hasError("cpf")) {
           <mat-error>{{ getError("cpf") }}</mat-error>
         }
@@ -121,7 +121,7 @@
     <div class="form-row">
       <mat-form-field>
         <mat-label>CEP</mat-label>
-        <input matInput formControlName="cep" (blur)="onCepBlur()" placeholder="12345-678"/>
+        <input matInput formControlName="cep" (blur)="onCepBlur()" mask="00.000-000" shownMaskExpression="__.___-___" [showMaskTyped]="true"/>
         @if (hasError("cep")) {
           <mat-error>{{ getError("cep") }}</mat-error>
         }
