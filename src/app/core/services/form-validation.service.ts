@@ -23,13 +23,11 @@ export class FormValidationService {
     }
     if (errors['length']) {
       let err = errors['length']
-      console.log(err);
-      return 'Este campo deve conter ' + err + ' caracteres!';
+      return 'Este campo deve conter '+ err +' caracteres!';
     }
     if (errors['numberLength']) {
       let err = errors['numberLength']
-      console.log(err);
-      return 'Este campo deve conter ' + err + ' dígitos!';
+      return 'Este campo deve conter '+ err +' dígitos!';
     }
     if (errors['max']) {
       let err = errors['max']
