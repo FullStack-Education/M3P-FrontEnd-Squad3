@@ -5,8 +5,8 @@
   <div class="card-container">
     <mat-card *ngFor="let grade of studentGrades" class="student-card" (click)="onViewGradeDetails(grade.id)">
       <mat-card-header>
-        <mat-card-title>{{ grade.materiaName }}</mat-card-title>
-        <mat-card-subtitle> <p>Nota: {{ grade.grade }}</p></mat-card-subtitle>
+        <mat-card-title> {{ grade.name }}</mat-card-title>
+        <mat-card-subtitle> <p>Matéria: {{ grade.materiaName }}</p></mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         data: {{ grade.date || null }}
@@ -15,16 +15,16 @@
   </div>
 </section>
 
-<section id="minhas-materias" *ngIf="isCurrentUserStudent()">
+<section id="student-grades" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Minhas Turmas / Matérias</h3>
+    <h3>Meus Cursos</h3>
   </mat-toolbar>
   <div class="card-container">
     <mat-card *ngFor="let enrollment of studentEnrollments" class="student-card">
       <mat-card-header>
-        <mat-card-title>Turma</mat-card-title>
+        <mat-card-title>{{ enrollment.courseName}}</mat-card-title>
+        <mat-card-subtitle> <p>Turma: {{ enrollment.name }}</p></mat-card-subtitle>
       </mat-card-header>
-      <mat-card-content>{{ enrollment.name }}</mat-card-content>
     </mat-card>
   </div>
 </section>

@@ -69,6 +69,12 @@ export class HomeComponent {
       .subscribe((enrollments) => {        
         console.log("enrollments do aluno:" , enrollments);
         this.studentEnrollments = enrollments.slice(0, 3);
+
+        this.studentEnrollments.forEach((enrollment) => {
+          this.enrollmentService.getCourseNameById(enrollment.courseId).subscribe((courseName) => {
+            enrollment.courseName = courseName; 
+          });
+        });
       });
     this.studentService
       .getGradesByOrder(this.currentUser!.id, 'desc', 3)
@@ -130,6 +136,6 @@ export class HomeComponent {
   }
 
   onViewGradeDetails(gradeId: string) {
-    this.router.navigate(['/grade', gradeId]);
+    this.router.navigate(['/grade-list']);
   }
 }
