@@ -42,7 +42,7 @@
       "complement": "",
       "enrollments": [
         "1",
-        "3"
+        "4"
       ],
       "papelId": "3",
       "id": "2"
@@ -269,19 +269,19 @@
       "cursoId": "3",
       "teacherId": "12",
       "studentIds": [
-        "2",
         "7",
         "8"
       ]
     },
     {
       "id": "4",
-      "courseId": "3",
+      "courseId": "1",
       "subjectId": "1",
       "name": "Turma B",
       "cursoId": "2",
       "teacherId": "11",
       "studentIds": [
+        "2",
         "3",
         "6"
       ]
