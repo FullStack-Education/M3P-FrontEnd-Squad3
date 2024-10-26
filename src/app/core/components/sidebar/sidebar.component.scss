@@ -9,7 +9,6 @@ $quarternary-color: #b8e0d4;
 }
 
 
-
 .sidenav {
   background: $tertiary-color;
   color: white;
@@ -22,7 +21,7 @@ $quarternary-color: #b8e0d4;
   align-items: center;
   justify-content: center;
   
-  h3, h4, h2 {
+  h3 {
     padding: 0 0.5rem 0 0 ;
     display: flex;
     align-items: center;
@@ -34,21 +33,18 @@ $quarternary-color: #b8e0d4;
   padding: 10px;
   width: 100%;
   transition: margin-left 0.3s ease;
-  background: $secondary-color;
+  background: $tertiary-color;
+}
+.closed-content {
+  height: 64px !important; 
+  overflow: hidden;
+  padding: 0; 
 }
 
 .mat-sidenav-content.hidden-content {
   width: 0;
   padding: 0;
   overflow: hidden;
-}
-
-.mat-sidenav-container .mat-sidenav {
-  width: 250px; 
-}
-
-.mat-sidenav-container .mat-sidenav.mat-sidenav-closed {
-  width: 70px; 
 }
 
 mat-list-item {

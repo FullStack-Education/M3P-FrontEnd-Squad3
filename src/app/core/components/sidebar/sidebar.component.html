@@ -7,8 +7,6 @@
     [style.width.px]="opened ? 250 : 250" 
     class="sidenav">
     
-    
-
     <mat-nav-list>
       <mat-list-item id="sidebar-header" (click)="sidenav.toggle()">
         <h3 *ngIf="opened">Menu
@@ -83,7 +81,7 @@
   </mat-sidenav>
   
 
-  <mat-sidenav-content [ngClass]="{'hidden-content': opened}">
+  <mat-sidenav-content [ngClass]="{'hidden-content': opened, 'closed-content': !opened}">
     <mat-list-item (click)="sidenav.toggle()">
       <mat-icon >{{ opened ? 'arrow_back_ios' : 'menu' }}</mat-icon>
     </mat-list-item> 
