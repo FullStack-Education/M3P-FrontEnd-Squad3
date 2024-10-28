@@ -4,13 +4,14 @@ import { Observable, of } from 'rxjs';
 import { map, catchError, switchMap } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
 import { IRole } from '../interfaces/role.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUsersUrl = 'http://localhost:3000/usuario';
-  private apiRolesUrl = 'http://localhost:3000/papel';
+  private apiUsersUrl = environment.apiUrl +'/usuario';
+  private apiRolesUrl = environment.apiUrl +'/papel';
   private currentUserKey = 'currentUser';
 
   constructor(private http: HttpClient) {}
@@ -35,6 +36,7 @@ export class AuthService {
     email: string,
     password: string
   ): Observable<IUser | null> {
+    console.log(this.apiUsersUrl)
     return this.http.get<IUser[]>(this.apiUsersUrl).pipe(
       map(
         (users) => {

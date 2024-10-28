@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "concurrently \"ng serve\" \"json-server --watch ./src/app/database/db.json\"",
+    "start-dev": "concurrently \"ng serve --configuration=development\" \"json-server --watch ./src/app/database/db.json\"",
+    "start-prod": "ng serve --configuration=production",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+
     "test": "ng test"
   },
   "private": true,
