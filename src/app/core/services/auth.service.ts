@@ -12,9 +12,6 @@ import { IToken } from '../interfaces/Itoken.inteface';
 })
 export class AuthService {
   private apiLoginUrl = '/api/login';
-
-  private apiUsersUrl = 'http://localhost:3000/usuario';
-  private apiRolesUrl = 'http://localhost:3000/papel';
   private currentUserKey = 'token';
 
   constructor(private http: HttpClient, private authToken :AuthTokenService) { }
