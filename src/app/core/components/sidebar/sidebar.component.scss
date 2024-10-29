@@ -29,12 +29,15 @@ $quarternary-color: #b8e0d4;
   }
 }
 
+
 .mat-sidenav-content {
   padding: 0.625rem;
   width: 100%;
   transition: margin-left 0.3s ease;
   background: $tertiary-color;
 }
+
+
 .closed-content {
   height: 4rem !important; 
   overflow: hidden;
@@ -66,7 +69,34 @@ mat-list-item {
 .mat-list-item mat-icon {
   margin-right: 1rem;
 }
-
- mat-divider {
+mat-divider {
   margin: 1rem 0 1rem 0;
- }
+}
+
+@media (max-width: 768px) {
+  .sidenav-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sidenav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15.625rem;
+    height: 100%;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    &.open {
+      transform: translateX(0); 
+    }
+  }
+
+  .mat-sidenav-content {
+    margin-left: 0; 
+    padding: 0;
+    transition: margin-left 0.3s ease;
+  }
+}
