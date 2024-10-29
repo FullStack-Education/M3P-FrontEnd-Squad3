@@ -3,11 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start-dev": "concurrently \"ng serve --configuration=development\" \"json-server --watch ./src/app/database/db.json\"",
-    "start-prod": "ng serve --configuration=production",
+    "start": "concurrently \"ng serve\" \"json-server --watch ./src/app/database/db.json\"",
+    "start:proxi": "ng serve --proxy-config src/proxy.config.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-
     "test": "ng test"
   },
   "private": true,
@@ -22,6 +21,7 @@
     "@angular/platform-browser": "^18.1.0",
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/router": "^18.1.0",
+    "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "ngx-mask": "^18.0.0",
     "rxjs": "~7.8.0",
