@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { IUser } from '../../interfaces/user.interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header-toolbar',
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatIconModule],
+  imports: [CommonModule, MatToolbarModule, MatIconModule, RouterLink],
   templateUrl: './header-toolbar.component.html',
   styleUrl: './header-toolbar.component.scss',
 })

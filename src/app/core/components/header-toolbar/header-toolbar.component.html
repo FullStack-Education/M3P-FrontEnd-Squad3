@@ -1,5 +1,7 @@
 <mat-toolbar class="toolbar">
-  <span>{{ pageTitle }}</span>
+  <a [routerLink]="['/home']">
+    <span>{{ pageTitle }}</span>
+  </a>
   <img src="assets/favicon.ico" alt="logo" class="app-logo">
   <span class="spacer"></span>
   @if (user) {
