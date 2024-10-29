@@ -113,8 +113,8 @@ export class GradeComponent implements OnInit {
       });
     } else if (this.authService.isTeacher()) {
       const currentTeacher = this.authService.getCurrentUser();
-      this.teachers = [currentTeacher!];
-      this.gradeForm.get('teacher')?.setValue(currentTeacher.id);
+      this.teachers = [];
+      this.gradeForm.get('teacher')?.setValue(currentTeacher.id_usuario);
       this.gradeForm.get('teacher')?.disable();
     }
 
