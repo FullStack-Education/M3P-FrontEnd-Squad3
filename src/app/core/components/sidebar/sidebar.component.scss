@@ -30,13 +30,13 @@ $quarternary-color: #b8e0d4;
 }
 
 .mat-sidenav-content {
-  padding: 10px;
+  padding: 0.625rem;
   width: 100%;
   transition: margin-left 0.3s ease;
   background: $tertiary-color;
 }
 .closed-content {
-  height: 64px !important; 
+  height: 4rem !important; 
   overflow: hidden;
   padding: 0; 
 }
@@ -54,7 +54,7 @@ mat-list-item {
   
   button {
     width: 90%;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     border-color: black;
     display: flex;
     padding: 0.3rem;
@@ -64,7 +64,7 @@ mat-list-item {
 }
 
 .mat-list-item mat-icon {
-  margin-right: 16px;
+  margin-right: 1rem;
 }
 
  mat-divider {
