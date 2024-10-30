@@ -26,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { IUser } from '../../core/interfaces/user.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
+import { ICourse } from '../../core/interfaces/course.interface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -50,6 +51,9 @@ type typeViewMode = 'read' | 'insert' | 'edit';
 export class EnrollmentComponent implements OnInit {
   enrollmentForm!: FormGroup;
   teachers = [] as IUser[];
+  courses: ICourse[] = [];
+  filteredTeachers: IUser[] = [];
+  filteredCourses: ICourse[] = [];
   viewMode: typeViewMode = 'read';
   enrollmentId: string | null = null;
 
@@ -79,6 +83,8 @@ export class EnrollmentComponent implements OnInit {
       if (this.viewMode === 'read') this.enrollmentForm.disable();
       else this.enrollmentForm.enable();
     }
+    this.loadTeachers();
+    this.loadCourses();
   }
 
   initializeForm() {
@@ -101,6 +107,7 @@ export class EnrollmentComponent implements OnInit {
         ],
       ],
       teacher: [{value: '', disabled: this.isCurrentUserTeacher() }, Validators.required],
+      course: ['', Validators.required],
     });
     this.userService.getAllTeachers().subscribe((teachers) => {
       this.teachers = teachers;
@@ -110,6 +117,20 @@ export class EnrollmentComponent implements OnInit {
   loadEnrollmentData(enrollmentId: string) {    
     this.enrollmentService.getEnrollmentById(enrollmentId).subscribe((enrollment) => {
       this.enrollmentForm.patchValue(enrollment);
+    });
+  }
+
+  loadTeachers() {
+    this.userService.getAllTeachers().subscribe((teachers) => {
+      this.teachers = teachers;
+      this.filteredTeachers = teachers;
+    });
+  }
+
+  loadCourses() {
+    this.enrollmentService.getCourses().subscribe((courses) => {
+      this.courses = courses;
+      this.filteredCourses = courses;
     });
   }
 

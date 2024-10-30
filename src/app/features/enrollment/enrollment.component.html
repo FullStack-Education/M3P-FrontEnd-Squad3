@@ -10,18 +10,31 @@
       </button>
     </div>
   </div>
+
   <form [formGroup]="enrollmentForm">
     <div class="form-row">
       <mat-form-field appearance="fill">
+        <mat-label>Curso</mat-label>
+        <mat-select formControlName="course" [disableOptionCentering]="true">
+          <mat-option *ngFor="let course of filteredCourses" [value]="course.id">
+            {{ course.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('course')">
+          {{ getError('course') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
         <mat-label>Professor</mat-label>
-        <mat-select formControlName="teacher">
-          <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+        <mat-select formControlName="teacher" [disableOptionCentering]="true">
+          <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher.id">
             {{ teacher.name }}
           </mat-option>
         </mat-select>
-        @if (hasError("teacher")) {
-          <mat-error>{{ getError("teacher") }}</mat-error>
-        }
+        <mat-error *ngIf="hasError('teacher')">
+          {{ getError('teacher') }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="form-row">
