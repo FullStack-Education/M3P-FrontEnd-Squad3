@@ -6,8 +6,9 @@ import * as jwt_decode from 'jwt-decode';
   providedIn: 'root'
 })
 export default class AuthTokenService {
-  public getToken(): string|null {
-    return localStorage.getItem('token');
+  public getToken(): string {
+    let token = localStorage.getItem('token');
+      return token || '';
   }
 
   public decodePayloadJWT(): any {

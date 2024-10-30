@@ -17,8 +17,10 @@ import {
 import { UserService } from '../../core/services/user.service';
 import { EnrollmentService, IEnrollmentClass } from '../../core/services/enrollment.service';
 import { IUser } from '../../core/interfaces/user.interface';
-import { ICourse } from '../../core/interfaces/course.interface'; 
+import { ICourse } from '../../core/interfaces/course.interface';
 import { IToken } from '../../core/interfaces/Itoken.inteface';
+import { StatiticService } from '../../core/services/statistic.service';
+import AuthTokenService from '../../core/services/auth-token.service';
 
 @Component({
   selector: 'app-home',
@@ -53,8 +55,10 @@ export class HomeComponent {
     private router: Router,
     private studentService: StudentService,
     private userService: UserService,
-    private enrollmentService: EnrollmentService
-  ) {}
+    private enrollmentService: EnrollmentService,
+    private statisticService: StatiticService,
+    private authTokenService: AuthTokenService,
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -65,16 +69,16 @@ export class HomeComponent {
 
   loadStudentData() {
     console.log('loadStudentData', this.currentUser!.id_usuario);
-    
+
     this.studentService
       .getEnrollments(this.currentUser!.id_usuario)
-      .subscribe((enrollments) => {        
-        console.log("enrollments do aluno:" , enrollments);
+      .subscribe((enrollments) => {
+        console.log("enrollments do aluno:", enrollments);
         this.studentEnrollments = enrollments.slice(0, 3);
 
         this.studentEnrollments.forEach((enrollment) => {
           this.enrollmentService.getCourseNameById(enrollment.courseId).subscribe((courseName) => {
-            enrollment.courseName = courseName; 
+            enrollment.courseName = courseName;
           });
         });
 
@@ -93,22 +97,19 @@ export class HomeComponent {
 
   loadCourses() {
     this.enrollmentService.getCourses().subscribe((courses) => {
-      this.extraSubjects = courses; 
+      this.extraSubjects = courses;
     });
   }
 
   loadAdminData() {
-    this.studentService.getStudents().subscribe((data) => {
-      this.students = data;
-      this.statistics.push({ title: 'Alunos', detail: this.students.length });
-    });
-    this.userService.getUsersByRole("2").subscribe((data) => {
-      this.teachers = data;
-      this.statistics.push({ title: 'Docentes', detail: this.teachers.length });
-    });
-    this.enrollmentService.getEnrollmentCount().subscribe((data) => {
-      this.statistics.push({ title: 'Turmas', detail: data });
-    });
+
+    let token: string = this.authTokenService.getToken();
+    this.statisticService.getStatitics(token).subscribe((data) => {
+      this.statistics.push({ title: 'Alunos', detail: data.alunosCount });
+      this.statistics.push({ title: 'Docentes', detail: data.docentesCount });
+      this.statistics.push({ title: 'Turmas', detail: data.turmasCount });
+    })
+
   }
 
   logout() {
