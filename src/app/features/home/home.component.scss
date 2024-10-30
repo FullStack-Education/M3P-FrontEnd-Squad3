@@ -98,12 +98,15 @@ $septenary-color: #c7522a;
   height: fit-content;
   background-color: #fff;
 
-  h3 {
+  h2 {
     color: $primary-color;
-    font-weight: 500;
+    font-weight:500;
     flex-grow: 1;
     text-align: center;
-    background-color: #0085850e;
+    background-color: #00858514;
+    height: 3rem;
+    padding-top: 1rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   }
 
   mat-form-field {
