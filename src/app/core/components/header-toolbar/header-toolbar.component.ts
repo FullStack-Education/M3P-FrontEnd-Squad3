@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { IUser } from '../../interfaces/user.interface';
-import { RouterLink } from '@angular/router';
+import { IToken } from '../../interfaces/Itoken.inteface';
 
 @Component({
   selector: 'app-header-toolbar',
@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
 })
 export class AppHeaderToolbarComponent implements OnInit {
   pageTitle = 'labPCP - Gestão Educacional';
-  user: IUser | null = null;
+  user: IToken | null = null;
 
   constructor(
     private authService: AuthService

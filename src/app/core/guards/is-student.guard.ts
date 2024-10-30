@@ -6,7 +6,7 @@ export const isStudentGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const currentUser = authService.getCurrentUser();
-  const isUserStudent = currentUser?.role?.name === 'Aluno';
+  const isUserStudent = currentUser?.scope === 'ALUNO';
   if (!isUserStudent) {
     router.navigate(['/unauthorized']);
   }

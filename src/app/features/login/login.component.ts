@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { IUser } from '../../core/interfaces/user.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { IToken } from '../../core/interfaces/Itoken.inteface';
 
 @Component({
   selector: 'app-login',
@@ -78,7 +80,8 @@ export class LoginComponent {
     private authService: AuthService,
     private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private authToken: AuthTokenService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -90,10 +93,10 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
     this.authService
       .signIn(email, password)
-      .subscribe((user: IUser | null) => {
+      .subscribe((user: IToken | null) => {
         if (user) {
           this.snackBar.open(
-            `Bem vinda, ${user.name}! Papel: ${user.role?.name}`,
+            `Bem vinda, ${user.name}! Papel: ${user.scope}`,
             'Close',
             { duration: 3000 }
           ).afterDismissed().subscribe(() => {
