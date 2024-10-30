@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { IUser } from '../../interfaces/user.interface';
+import { IToken } from '../../interfaces/Itoken.inteface';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class AppSidebarComponent implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   events: string[] = [];
   opened: boolean = true;
-  user: IUser | null = null;
+  user: IToken | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -49,16 +50,16 @@ export class AppSidebarComponent implements OnInit {
 
   get isAdmin(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.role?.name === 'Admin';
+    return user?.scope === 'ADM';
   }
 
   get isDocente(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.role?.name === 'Docente';
+    return user?.scope === 'PROFESSOR';
   }
 
   get isAluno(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.role?.name === 'Aluno';
+    return user?.scope === 'ALUNO';
   }
 }

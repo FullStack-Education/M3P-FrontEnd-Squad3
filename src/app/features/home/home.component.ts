@@ -18,6 +18,7 @@ import { UserService } from '../../core/services/user.service';
 import { EnrollmentService, IEnrollmentClass } from '../../core/services/enrollment.service';
 import { IUser } from '../../core/interfaces/user.interface';
 import { ICourse } from '../../core/interfaces/course.interface'; 
+import { IToken } from '../../core/interfaces/Itoken.inteface';
 
 @Component({
   selector: 'app-home',
@@ -39,7 +40,7 @@ import { ICourse } from '../../core/interfaces/course.interface';
 })
 export class HomeComponent {
   studentSearchTerm: string = '';
-  currentUser: IUser | null = null;
+  currentUser: IToken | null = null;
   statistics = [] as { title: string; detail: number }[];
   students = [] as IUser[];
   teachers = [] as IUser[];
@@ -63,10 +64,10 @@ export class HomeComponent {
   }
 
   loadStudentData() {
-    console.log('loadStudentData', this.currentUser!.id);
+    console.log('loadStudentData', this.currentUser!.id_usuario);
     
     this.studentService
-      .getEnrollments(this.currentUser!.id)
+      .getEnrollments(this.currentUser!.id_usuario)
       .subscribe((enrollments) => {        
         console.log("enrollments do aluno:" , enrollments);
         this.studentEnrollments = enrollments.slice(0, 3);
@@ -84,7 +85,7 @@ export class HomeComponent {
         });
       });
     this.studentService
-      .getGradesByOrder(this.currentUser!.id, 'desc', 3)
+      .getGradesByOrder(this.currentUser!.id_usuario, 'desc', 3)
       .subscribe((grades) => {
         this.studentGrades = grades;
       });
@@ -137,15 +138,15 @@ export class HomeComponent {
   }
 
   isCurrentUserAdmin(): boolean {
-    return this.currentUser?.role?.name === 'Admin';
+    return this.currentUser?.scope === 'ADM';
   }
 
   isCurrentUserTeacher(): boolean {
-    return this.currentUser?.role?.name === 'Docente';
+    return this.currentUser?.scope === 'PROFESSOR';
   }
 
   isCurrentUserStudent(): boolean {
-    return this.currentUser?.role?.name === 'Aluno';
+    return this.currentUser?.scope === 'ALUNO';
   }
 
   onViewGradeDetails(gradeId: string) {
