@@ -63,6 +63,8 @@ export class HomeComponent {
     private enrollmentService: EnrollmentService,
     private statisticService: StatiticService,
     private authTokenService: AuthTokenService,
+    private idadePipe: IdadePipe,
+    private phonePipe: PhonePipe
   ) { }
 
   ngOnInit(): void {
@@ -73,12 +75,9 @@ export class HomeComponent {
   }
 
   loadStudentData() {
-    console.log('loadStudentData', this.currentUser!.id_usuario);
-
     this.studentService
       .getEnrollments(this.currentUser!.id_usuario)
       .subscribe((enrollments) => {
-        console.log("enrollments do aluno:", enrollments);
         this.studentEnrollments = enrollments.slice(0, 3);
 
         this.studentEnrollments.forEach((enrollment) => {
@@ -133,15 +132,24 @@ export class HomeComponent {
 
   onSearch() {
     const searchTerm = this.studentSearchTerm.toLowerCase();
+    let token: string = this.authTokenService.getToken();
 
-    this.studentService.getStudents().subscribe((data) => {
-      // this.students = data.filter((student) => {
-      //   return (
-      //     student.name.toLowerCase().includes(searchTerm) ||
-      //     student.age?.toString().includes(searchTerm) ||
-      //     student.phone?.includes(searchTerm)
-      //   );
-      // });
+    this.studentService.getStudentsToken(token).subscribe((data) => {
+      this.students = data.alunoData.filter((student) => {
+
+
+        return (
+          student.id?.toString().includes(searchTerm) ||
+          student.nome.toLowerCase().includes(searchTerm) ||
+          student.email?.toString().includes(searchTerm) ||
+          student.cpf?.toString().includes(searchTerm) ||
+          student.naturalidade?.toString().includes(searchTerm) ||
+          student.dataNascimento?.toString().includes(searchTerm) ||
+          this.idadePipe.transform(student.dataNascimento)?.toString().includes(searchTerm) ||
+          this.phonePipe.transform(student.telefone)?.includes(searchTerm) ||
+          student.telefone?.includes(searchTerm)
+        );
+      });
     });
   }
 
