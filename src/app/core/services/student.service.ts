@@ -4,8 +4,10 @@ import { filter, map, mergeMap, switchMap } from 'rxjs/operators';
 import { UserService } from './user.service';
 import { EnrollmentService, IEnrollmentClass, IDisciplines } from './enrollment.service';
 import { GradeService } from './grade.service';
-import { IUser as IStudent } from '../interfaces/user.interface';
+import { IUser } from '../interfaces/user.interface';
 import { IGrade } from '../interfaces/grade.interface';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { IResponseStudents } from '../interfaces/response.students.interface';
 
 export interface IStudentEnrollment extends IEnrollmentClass {
   materiaName: string
@@ -20,19 +22,32 @@ export interface IStudentGrade extends IGrade {
   providedIn: 'root',
 })
 export class StudentService {
+  private readonly apiUrl = '/api/alunos';
+
   private readonly studentRoleId = "3";
 
   constructor(
+    private http: HttpClient,
     private userService: UserService,
     private enrollmentService: EnrollmentService,
     private gradeService: GradeService
   ) {}
 
-  getStudents(): Observable<IStudent[]> {
+  getStudentsToken(token?: string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.get<IResponseStudents>(this.apiUrl, { headers: reqHeader });
+  }
+
+
+  getStudents(): Observable<IUser[]> {
     return this.userService.getUsersByRole(this.studentRoleId);
   }
 
-  getStudentById(id: string): Observable<IStudent> {
+  getStudentById(id: string): Observable<IUser> {
     return this.userService.getUserById(id).pipe(
       filter((user) => user.papelId === this.studentRoleId),
       map((user) => user)
@@ -43,8 +58,8 @@ export class StudentService {
     const response =
       this.enrollmentService.getEnrollmentsByStudentId(studentId);
     console.log('getEnrollments', response);
-    
-    return response; 
+
+    return response;
   }
 
 
@@ -70,7 +85,7 @@ export class StudentService {
   ): IStudentGrade {
     const discipline = disciplines.find((d) => {
       console.log(d.id == grade.materiaId, d.id, grade.materiaId);
-      
+
       return d.id == grade.materiaId;
     });
     return {
@@ -89,12 +104,12 @@ export class StudentService {
       .pipe(mergeMap((grades) => this.addDisciplineNames(grades)));
   }
 
-  addStudent(student: IStudent): Observable<IStudent> {
+  addStudent(student: IUser): Observable<IUser> {
     student.papelId = this.studentRoleId; // Ensure the role is set to Student
     return this.userService.addUser(student);
   }
 
-  setStudent(student: IStudent): Observable<IStudent> {
+  setStudent(student: IUser): Observable<IUser> {
     if (student.papelId !== this.studentRoleId) {
       throw new Error('Invalid role for student');
     }
