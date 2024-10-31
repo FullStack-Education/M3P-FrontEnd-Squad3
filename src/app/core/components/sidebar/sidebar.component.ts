@@ -30,7 +30,7 @@ import { IToken } from '../../interfaces/Itoken.inteface';
 export class AppSidebarComponent implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   events: string[] = [];
-  opened: boolean = true;
+  opened: boolean = false;
   user: IToken | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
