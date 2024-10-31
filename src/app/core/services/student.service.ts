@@ -72,6 +72,15 @@ export class StudentService {
     return this.http.get<IResponseCursoAluno>(`${this.apiUrl}/${studentId}/meu-curso`, { headers: reqHeader });
   }
 
+  getCursosExtrasAlunoToken(studentId: string, token: string): Observable<IResponseCursoAluno> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    
+    return this.http.get<IResponseCursoAluno>(`${this.apiUrl}/${studentId}/cursos-extra`, { headers: reqHeader });
+  }
+
   getEnrollments(studentId: string): Observable<IEnrollmentClass[]> {
     const response =
       this.enrollmentService.getEnrollmentsByStudentId(studentId);

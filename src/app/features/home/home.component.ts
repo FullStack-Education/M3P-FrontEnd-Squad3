@@ -55,6 +55,7 @@ export class HomeComponent {
   teachers = [] as IUser[];
   studentGrades = [] as INota[];
   studentYourCourse: ICursoAluno | null = null;
+  studentExtraCourses = [] as ICursoAluno[];
   studentEnrollments = [] as IEnrollmentClass[];
   extraSubjects = [] as ICourse[];
 
@@ -90,9 +91,16 @@ export class HomeComponent {
 
       this.studentService
       .getCursoAlunoToken(this.currentUser.id_aluno, token)
-      .subscribe((notas) => {
-        this.studentYourCourse = notas.cursoData[0];
+      .subscribe((curso) => {
+        this.studentYourCourse = curso.cursoData[0];
       });
+
+      this.studentService
+      .getCursosExtrasAlunoToken(this.currentUser.id_aluno, token)
+      .subscribe((cursos) => {
+        this.studentExtraCourses = cursos.cursoData;
+      });
+      
 
 
     }
