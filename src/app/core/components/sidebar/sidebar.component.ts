@@ -55,7 +55,7 @@ export class AppSidebarComponent implements OnInit {
 
   get isDocente(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.scope === 'PROFESSOR';
+    return user?.scope === "PEDAGOGICO";
   }
 
   get isAluno(): boolean {
