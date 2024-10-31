@@ -24,6 +24,7 @@ import AuthTokenService from '../../core/services/auth-token.service';
 import { IStudent } from '../../core/interfaces/student.interface';
 import { IdadePipe } from '../../core/pipes/idade.pipe';
 import { PhonePipe } from '../../core/pipes/phone.pipe';
+import { INota } from '../../core/interfaces/nota.inteface';
 
 @Component({
   selector: 'app-home',
@@ -51,9 +52,10 @@ export class HomeComponent {
   statistics = [] as { title: string; detail: number }[];
   students = [] as IStudent[];
   teachers = [] as IUser[];
-  studentGrades = [] as IStudentGrade[];
+  studentGrades = [] as INota[];
   studentEnrollments = [] as IEnrollmentClass[];
   extraSubjects = [] as ICourse[];
+
 
   constructor(
     private authService: AuthService,
@@ -75,28 +77,22 @@ export class HomeComponent {
   }
 
   loadStudentData() {
-    this.studentService
-      .getEnrollments(this.currentUser!.id_usuario)
-      .subscribe((enrollments) => {
-        this.studentEnrollments = enrollments.slice(0, 3);
-
-        this.studentEnrollments.forEach((enrollment) => {
-          this.enrollmentService.getCourseNameById(enrollment.courseId).subscribe((courseName) => {
-            enrollment.courseName = courseName;
-          });
-        });
-
-        this.enrollmentService.getCourses().subscribe((courses) => {
-          this.extraSubjects = courses.filter(course => {
-            return !this.studentEnrollments.some(enrollment => enrollment.courseId === course.id);
-          });
-        });
+    let token: string = this.authTokenService.getToken();
+    
+    if(this.currentUser?.id_aluno){
+      this.studentService
+      .getNotasAlunoToken(this.currentUser.id_aluno, token)
+      .subscribe((notas) => {
+        this.studentGrades = notas.notaData.sort((a:INota, b:INota) => parseInt(b.id)-parseInt(a.id));
       });
-    this.studentService
-      .getGradesByOrder(this.currentUser!.id_usuario, 'desc', 3)
-      .subscribe((grades) => {
-        this.studentGrades = grades;
-      });
+    }
+    
+
+    // this.studentService
+    //   .getGradesByOrder(this.currentUser!.id_usuario, 'desc', 3)
+    //   .subscribe((grades) => {
+    //     this.studentGrades = grades;
+    //   });
   }
 
   loadCourses() {
