@@ -25,6 +25,7 @@ import { IStudent } from '../../core/interfaces/student.interface';
 import { IdadePipe } from '../../core/pipes/idade.pipe';
 import { PhonePipe } from '../../core/pipes/phone.pipe';
 import { INota } from '../../core/interfaces/nota.inteface';
+import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
 
 @Component({
   selector: 'app-home',
@@ -53,6 +54,7 @@ export class HomeComponent {
   students = [] as IStudent[];
   teachers = [] as IUser[];
   studentGrades = [] as INota[];
+  studentYourCourse: ICursoAluno | null = null;
   studentEnrollments = [] as IEnrollmentClass[];
   extraSubjects = [] as ICourse[];
 
@@ -85,6 +87,14 @@ export class HomeComponent {
       .subscribe((notas) => {
         this.studentGrades = notas.notaData.sort((a:INota, b:INota) => parseInt(b.id)-parseInt(a.id));
       });
+
+      this.studentService
+      .getCursoAlunoToken(this.currentUser.id_aluno, token)
+      .subscribe((notas) => {
+        this.studentYourCourse = notas.cursoData[0];
+      });
+
+
     }
     
 

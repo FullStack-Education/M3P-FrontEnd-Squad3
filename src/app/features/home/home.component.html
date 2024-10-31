@@ -20,10 +20,9 @@
     <h3>Meu Curso</h3>
   </mat-toolbar>
   <div class="card-container">
-    <mat-card *ngFor="let enrollment of studentEnrollments" class="student-card">
+    <mat-card class="student-card">
       <mat-card-header>
-        <mat-card-title>{{ enrollment.courseName}}</mat-card-title>
-        <mat-card-subtitle> <p>Turma: {{ enrollment.name }}</p></mat-card-subtitle>
+        <mat-card-title>{{ studentYourCourse?.nome}}</mat-card-title>
       </mat-card-header>
     </mat-card>
   </div>
