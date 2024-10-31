@@ -9,7 +9,7 @@
         <mat-card-subtitle> <p>nota: {{ grade.valor }}</p></mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        data: {{ grade.data || null }}
+        data: {{ grade.data | dateFormatPipe  }}
       </mat-card-content>
     </mat-card>
   </div>

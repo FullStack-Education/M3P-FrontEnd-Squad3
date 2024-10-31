@@ -26,6 +26,7 @@ import { IdadePipe } from '../../core/pipes/idade.pipe';
 import { PhonePipe } from '../../core/pipes/phone.pipe';
 import { INota } from '../../core/interfaces/nota.inteface';
 import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
+import { DateFormatPipe } from '../../core/pipes/date-format.pipe';
 
 @Component({
   selector: 'app-home',
@@ -44,7 +45,8 @@ import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
     RouterModule,
     MatButtonModule,
     IdadePipe,
-    PhonePipe
+    PhonePipe,
+    DateFormatPipe
   ],
 })
 export class HomeComponent {
