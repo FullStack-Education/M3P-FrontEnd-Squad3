@@ -21,6 +21,9 @@ import { ICourse } from '../../core/interfaces/course.interface';
 import { IToken } from '../../core/interfaces/Itoken.inteface';
 import { StatiticService } from '../../core/services/statistic.service';
 import AuthTokenService from '../../core/services/auth-token.service';
+import { IStudent } from '../../core/interfaces/student.interface';
+import { IdadePipe } from '../../core/pipes/idade.pipe';
+import { PhonePipe } from '../../core/pipes/phone.pipe';
 
 @Component({
   selector: 'app-home',
@@ -38,13 +41,15 @@ import AuthTokenService from '../../core/services/auth-token.service';
     CommonModule,
     RouterModule,
     MatButtonModule,
+    IdadePipe,
+    PhonePipe
   ],
 })
 export class HomeComponent {
   studentSearchTerm: string = '';
   currentUser: IToken | null = null;
   statistics = [] as { title: string; detail: number }[];
-  students = [] as IUser[];
+  students = [] as IStudent[];
   teachers = [] as IUser[];
   studentGrades = [] as IStudentGrade[];
   studentEnrollments = [] as IEnrollmentClass[];
@@ -102,13 +107,15 @@ export class HomeComponent {
   }
 
   loadAdminData() {
-
     let token: string = this.authTokenService.getToken();
     this.statisticService.getStatitics(token).subscribe((data) => {
       this.statistics.push({ title: 'Alunos', detail: data.alunosCount });
       this.statistics.push({ title: 'Docentes', detail: data.docentesCount });
       this.statistics.push({ title: 'Turmas', detail: data.turmasCount });
     })
+    this.studentService.getStudentsToken(token).subscribe((data) => {
+      this.students = data.alunoData;
+    });
 
   }
 
@@ -119,7 +126,7 @@ export class HomeComponent {
 
   loadTeacherData() {
     this.studentService.getStudents().subscribe((data) => {
-      this.students = data;
+      // this.students = data;
       this.statistics.push({ title: 'Alunos', detail: this.students.length });
     });
   }
@@ -128,13 +135,13 @@ export class HomeComponent {
     const searchTerm = this.studentSearchTerm.toLowerCase();
 
     this.studentService.getStudents().subscribe((data) => {
-      this.students = data.filter((student) => {
-        return (
-          student.name.toLowerCase().includes(searchTerm) ||
-          student.age?.toString().includes(searchTerm) ||
-          student.phone?.includes(searchTerm)
-        );
-      });
+      // this.students = data.filter((student) => {
+      //   return (
+      //     student.name.toLowerCase().includes(searchTerm) ||
+      //     student.age?.toString().includes(searchTerm) ||
+      //     student.phone?.includes(searchTerm)
+      //   );
+      // });
     });
   }
 
