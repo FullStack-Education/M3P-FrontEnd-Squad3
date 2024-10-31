@@ -17,8 +17,16 @@ import {
 import { UserService } from '../../core/services/user.service';
 import { EnrollmentService, IEnrollmentClass } from '../../core/services/enrollment.service';
 import { IUser } from '../../core/interfaces/user.interface';
-import { ICourse } from '../../core/interfaces/course.interface'; 
+import { ICourse } from '../../core/interfaces/course.interface';
 import { IToken } from '../../core/interfaces/Itoken.inteface';
+import { StatiticService } from '../../core/services/statistic.service';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { IStudent } from '../../core/interfaces/student.interface';
+import { IdadePipe } from '../../core/pipes/idade.pipe';
+import { PhonePipe } from '../../core/pipes/phone.pipe';
+import { INota } from '../../core/interfaces/nota.inteface';
+import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
+import { DateFormatPipe } from '../../core/pipes/date-format.pipe';
 
 @Component({
   selector: 'app-home',
@@ -36,25 +44,35 @@ import { IToken } from '../../core/interfaces/Itoken.inteface';
     CommonModule,
     RouterModule,
     MatButtonModule,
+    IdadePipe,
+    PhonePipe,
+    DateFormatPipe
   ],
 })
 export class HomeComponent {
   studentSearchTerm: string = '';
   currentUser: IToken | null = null;
   statistics = [] as { title: string; detail: number }[];
-  students = [] as IUser[];
+  students = [] as IStudent[];
   teachers = [] as IUser[];
-  studentGrades = [] as IStudentGrade[];
+  studentGrades = [] as INota[];
+  studentYourCourse: ICursoAluno | null = null;
+  studentExtraCourses = [] as ICursoAluno[];
   studentEnrollments = [] as IEnrollmentClass[];
   extraSubjects = [] as ICourse[];
+
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private studentService: StudentService,
     private userService: UserService,
-    private enrollmentService: EnrollmentService
-  ) {}
+    private enrollmentService: EnrollmentService,
+    private statisticService: StatiticService,
+    private authTokenService: AuthTokenService,
+    private idadePipe: IdadePipe,
+    private phonePipe: PhonePipe
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -64,51 +82,56 @@ export class HomeComponent {
   }
 
   loadStudentData() {
-    console.log('loadStudentData', this.currentUser!.id_usuario);
+    let token: string = this.authTokenService.getToken();
     
-    this.studentService
-      .getEnrollments(this.currentUser!.id_usuario)
-      .subscribe((enrollments) => {        
-        console.log("enrollments do aluno:" , enrollments);
-        this.studentEnrollments = enrollments.slice(0, 3);
-
-        this.studentEnrollments.forEach((enrollment) => {
-          this.enrollmentService.getCourseNameById(enrollment.courseId).subscribe((courseName) => {
-            enrollment.courseName = courseName; 
-          });
-        });
-
-        this.enrollmentService.getCourses().subscribe((courses) => {
-          this.extraSubjects = courses.filter(course => {
-            return !this.studentEnrollments.some(enrollment => enrollment.courseId === course.id);
-          });
-        });
+    if(this.currentUser?.id_aluno){
+      this.studentService
+      .getNotasAlunoToken(this.currentUser.id_aluno, token)
+      .subscribe((notas) => {
+        this.studentGrades = notas.notaData.sort((a:INota, b:INota) => parseInt(b.id)-parseInt(a.id));
       });
-    this.studentService
-      .getGradesByOrder(this.currentUser!.id_usuario, 'desc', 3)
-      .subscribe((grades) => {
-        this.studentGrades = grades;
+
+      this.studentService
+      .getCursoAlunoToken(this.currentUser.id_aluno, token)
+      .subscribe((curso) => {
+        this.studentYourCourse = curso.cursoData[0];
       });
+
+      this.studentService
+      .getCursosExtrasAlunoToken(this.currentUser.id_aluno, token)
+      .subscribe((cursos) => {
+        this.studentExtraCourses = cursos.cursoData;
+      });
+      
+
+
+    }
+    
+
+    // this.studentService
+    //   .getGradesByOrder(this.currentUser!.id_usuario, 'desc', 3)
+    //   .subscribe((grades) => {
+    //     this.studentGrades = grades;
+    //   });
   }
 
   loadCourses() {
     this.enrollmentService.getCourses().subscribe((courses) => {
-      this.extraSubjects = courses; 
+      this.extraSubjects = courses;
     });
   }
 
   loadAdminData() {
-    this.studentService.getStudents().subscribe((data) => {
-      this.students = data;
-      this.statistics.push({ title: 'Alunos', detail: this.students.length });
+    let token: string = this.authTokenService.getToken();
+    this.statisticService.getStatitics(token).subscribe((data) => {
+      this.statistics.push({ title: 'Alunos', detail: data.alunosCount });
+      this.statistics.push({ title: 'Docentes', detail: data.docentesCount });
+      this.statistics.push({ title: 'Turmas', detail: data.turmasCount });
+    })
+    this.studentService.getStudentsToken(token).subscribe((data) => {
+      this.students = data.alunoData;
     });
-    this.userService.getUsersByRole("2").subscribe((data) => {
-      this.teachers = data;
-      this.statistics.push({ title: 'Docentes', detail: this.teachers.length });
-    });
-    this.enrollmentService.getEnrollmentCount().subscribe((data) => {
-      this.statistics.push({ title: 'Turmas', detail: data });
-    });
+
   }
 
   logout() {
@@ -117,21 +140,34 @@ export class HomeComponent {
   }
 
   loadTeacherData() {
-    this.studentService.getStudents().subscribe((data) => {
-      this.students = data;
-      this.statistics.push({ title: 'Alunos', detail: this.students.length });
+    let token: string = this.authTokenService.getToken();
+    this.statisticService.getStatitics(token).subscribe((data) => {
+      this.statistics.push({ title: 'Alunos', detail: data.alunosCount });
+    })
+    this.studentService.getStudentsToken(token).subscribe((data) => {
+      this.students = data.alunoData;
     });
   }
 
   onSearch() {
     const searchTerm = this.studentSearchTerm.toLowerCase();
+    let token: string = this.authTokenService.getToken();
 
-    this.studentService.getStudents().subscribe((data) => {
-      this.students = data.filter((student) => {
+    this.studentService.getStudentsToken(token).subscribe((data) => {
+      this.students = data.alunoData.filter((student) => {
+
         return (
-          student.name.toLowerCase().includes(searchTerm) ||
-          student.age?.toString().includes(searchTerm) ||
-          student.phone?.includes(searchTerm)
+          student.id?.toString().includes(searchTerm) ||
+          student.nome.toLowerCase().includes(searchTerm) ||
+          student.email?.toString().includes(searchTerm) ||
+          student.cpf?.toString().includes(searchTerm) ||
+          student.naturalidade?.toString().includes(searchTerm) ||
+          student.dataNascimento?.toString().includes(searchTerm) ||
+          (this.idadePipe.transform(student.dataNascimento)?.toString().includes(searchTerm)  
+            && this.idadePipe.transform(student.dataNascimento)?.toString().length === searchTerm.length 
+          )||
+          this.phonePipe.transform(student.telefone)?.includes(searchTerm) ||
+          student.telefone?.includes(searchTerm)
         );
       });
     });
@@ -142,7 +178,7 @@ export class HomeComponent {
   }
 
   isCurrentUserTeacher(): boolean {
-    return this.currentUser?.scope === 'PROFESSOR';
+    return this.currentUser?.scope === "PEDAGOGICO";
   }
 
   isCurrentUserStudent(): boolean {

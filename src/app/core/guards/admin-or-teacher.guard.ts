@@ -7,7 +7,7 @@ export const AdminOrTeacherGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const currentUser = authService.getCurrentUser();
-  const isUserAdminOrTeacher = currentUser?.scope === 'ADM' || currentUser?.scope === 'PROFESSOR';
+  const isUserAdminOrTeacher = currentUser?.scope === 'ADM'  || currentUser?.scope === "PEDAGOGICO";
   if (!isUserAdminOrTeacher) {
     router.navigate(['/unauthorized']);
   }
