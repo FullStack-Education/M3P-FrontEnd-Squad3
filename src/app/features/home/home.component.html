@@ -1,6 +1,6 @@
 <section id="student-grades" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Minhas Avaliações</h3>
+    <h2>Minhas Avaliações</h2>
   </mat-toolbar>
   <div class="card-container">
     <mat-card *ngFor="let grade of studentGrades.slice(0, 3)" class="student-card" (click)="onViewGradeDetails(grade.id)">
@@ -17,7 +17,7 @@
 
 <section id="student-grades" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Meu Curso</h3>
+    <h2>Meu Curso</h2>
   </mat-toolbar>
   <div class="card-container">
     <mat-card class="student-card">
@@ -30,7 +30,7 @@
 
 <section id="disciplinas-extras" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Cursos Extras Disponíveis</h3>
+    <h2>Cursos Extras Disponíveis</h2>
   </mat-toolbar>
   <div class="card-container">
     <mat-card *ngFor="let course of studentExtraCourses" class="student-card">
@@ -43,7 +43,7 @@
 
 <section id="statistics" *ngIf="isCurrentUserAdmin()" >
   <mat-toolbar id="welcome-toolbar" class="mat-toolbar">
-    <h3>Estatisticas</h3>
+    <h2>Estatisticas</h2>
   </mat-toolbar>
 
   <div class="card-container">
@@ -60,7 +60,7 @@
 
 <section id="student-listing" *ngIf="isCurrentUserAdmin() || isCurrentUserTeacher()">
   <mat-toolbar class="mat-toolbar">
-    <mat-form-field appearance="fill">
+    <mat-form-field >
       <mat-label>Pesquisar aluno:</mat-label>
       <input
         matInput

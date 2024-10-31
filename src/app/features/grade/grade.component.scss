@@ -10,15 +10,18 @@ $septenary-color: #c7522a;
 :host{
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100vh;
   background: #fff;
-  background-color: $quarternary-color;
+  margin-top: 2rem;
 }
 
 .grade-registration-container {
   margin: 0.5rem;
-  padding: 1rem;
-  background-color: $quarternary-color;
+  padding: 2rem;
+  background-color: #00858514;
+  width: 80%;
+  height: auto;
 
 
   .form-header {
@@ -29,6 +32,7 @@ $septenary-color: #c7522a;
 
     .form-title {
       margin: 0;
+      color: $primary-color;
     }
 
     .form-actions {
