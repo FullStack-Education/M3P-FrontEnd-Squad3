@@ -8,6 +8,7 @@ import { IUser } from '../interfaces/user.interface';
 import { IGrade } from '../interfaces/grade.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IResponseStudents } from '../interfaces/response.students.interface';
+import { IResponseNotaAluno } from '../interfaces/response.nota.aluno.inteface';
 
 export interface IStudentEnrollment extends IEnrollmentClass {
   materiaName: string
@@ -52,6 +53,14 @@ export class StudentService {
       filter((user) => user.papelId === this.studentRoleId),
       map((user) => user)
     );
+  }
+
+  getNotasAlunoToken(studentId: string, token:string): Observable<IResponseNotaAluno> {
+       const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.get<IResponseNotaAluno>(`${this.apiUrl}/${studentId}/notas`, { headers: reqHeader });
   }
 
   getEnrollments(studentId: string): Observable<IEnrollmentClass[]> {
