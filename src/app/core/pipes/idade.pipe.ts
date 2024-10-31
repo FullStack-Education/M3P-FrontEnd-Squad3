@@ -1,13 +1,16 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import moment, { Moment } from 'moment';
 
 @Pipe({
   name: 'idadePipe',
   standalone: true
 })
+@Injectable({
+  providedIn: 'root'
+})
 export class IdadePipe implements PipeTransform {
 
-  transform(dataNascimentoStr: string| undefined): any {
+  transform(dataNascimentoStr: string| undefined): number | null {
     if (!dataNascimentoStr) {
       return null;
     }
