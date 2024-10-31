@@ -14,7 +14,6 @@ export default class AuthTokenService {
   public decodePayloadJWT(): any {
     try {
       let jwt = jwt_decode.jwtDecode(this.getToken() || '');
-      console.log(jwt)
       return jwt;
     } catch (Error) {
       return null;
