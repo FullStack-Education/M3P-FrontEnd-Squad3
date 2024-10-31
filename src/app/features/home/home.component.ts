@@ -124,9 +124,12 @@ export class HomeComponent {
   }
 
   loadTeacherData() {
-    this.studentService.getStudents().subscribe((data) => {
-      // this.students = data;
-      this.statistics.push({ title: 'Alunos', detail: this.students.length });
+    let token: string = this.authTokenService.getToken();
+    this.statisticService.getStatitics(token).subscribe((data) => {
+      this.statistics.push({ title: 'Alunos', detail: data.alunosCount });
+    })
+    this.studentService.getStudentsToken(token).subscribe((data) => {
+      this.students = data.alunoData;
     });
   }
 
@@ -137,7 +140,6 @@ export class HomeComponent {
     this.studentService.getStudentsToken(token).subscribe((data) => {
       this.students = data.alunoData.filter((student) => {
 
-
         return (
           student.id?.toString().includes(searchTerm) ||
           student.nome.toLowerCase().includes(searchTerm) ||
@@ -145,7 +147,9 @@ export class HomeComponent {
           student.cpf?.toString().includes(searchTerm) ||
           student.naturalidade?.toString().includes(searchTerm) ||
           student.dataNascimento?.toString().includes(searchTerm) ||
-          this.idadePipe.transform(student.dataNascimento)?.toString().includes(searchTerm) ||
+          (this.idadePipe.transform(student.dataNascimento)?.toString().includes(searchTerm)  
+            && this.idadePipe.transform(student.dataNascimento)?.toString().length === searchTerm.length 
+          )||
           this.phonePipe.transform(student.telefone)?.includes(searchTerm) ||
           student.telefone?.includes(searchTerm)
         );
@@ -158,7 +162,7 @@ export class HomeComponent {
   }
 
   isCurrentUserTeacher(): boolean {
-    return this.currentUser?.scope === 'PROFESSOR';
+    return this.currentUser?.scope === "PEDAGOGICO";
   }
 
   isCurrentUserStudent(): boolean {
