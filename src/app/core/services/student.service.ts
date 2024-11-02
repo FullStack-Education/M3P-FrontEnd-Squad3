@@ -10,6 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IResponseStudents } from '../interfaces/response.students.interface';
 import { IResponseNotaAluno } from '../interfaces/response.nota.aluno.inteface';
 import { IResponseCursoAluno } from '../interfaces/response.curso.aluno.inteface';
+import { IRequestCreateAluno } from '../interfaces/request.create.aluno.inteface';
 
 export interface IStudentEnrollment extends IEnrollmentClass {
   materiaName: string
@@ -42,6 +43,14 @@ export class StudentService {
     })
 
     return this.http.get<IResponseStudents>(this.apiUrl, { headers: reqHeader });
+  }
+  saveStudentToken(body:IRequestCreateAluno,token?: string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.post<IResponseStudents>(this.apiUrl, body,{ headers: reqHeader });
   }
 
 

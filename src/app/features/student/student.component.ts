@@ -30,6 +30,7 @@ import { StudentService, IStudentEnrollment } from '../../core/services/student.
 import { FormValidationService } from '../../core/services/form-validation.service';
 import { NgxMaskDirective } from 'ngx-mask';
 import AuthTokenService from '../../core/services/auth-token.service';
+import moment from 'moment';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -58,7 +59,6 @@ export class StudentComponent implements OnInit {
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
   enrollments = [] as IEnrollmentClass[];
-  disciplines = [] as IDisciplines[];
   viewMode: typeViewMode = 'read';
   studentId: string | null = null;
   isEditMode: boolean = false;
@@ -123,8 +123,7 @@ export class StudentComponent implements OnInit {
       city: [{ value: '', disabled: true }],
       state: [{ value: '', disabled: true }],
       complement: [''],
-      enrollment: ['', [Validators.required]],
-      disciplines: [[], [Validators.required]],
+      enrollment: ['', [Validators.required]]
     });
     this.enrollmentService.getEnrollments().subscribe((enrollments) => {
       this.enrollments = enrollments;
@@ -140,7 +139,7 @@ export class StudentComponent implements OnInit {
   cpfValidator(control: FormControl) {
     const cpf: string = control.value;
 
-    const numbers: number[] = cpf.split('')
+    const numbers: number[] = cpf?.split('')
       .map(char => Number.parseInt(char))
       .filter(number => !Number.isNaN(number));
 
@@ -203,16 +202,14 @@ export class StudentComponent implements OnInit {
 
   onSave() {
     
-    console.log(this.studentForm.value)
 
     if (this.studentForm.invalid) {
       this.studentForm.markAllAsTouched(this.studentForm.controls);
-      alert('Existem campos inválidos, revise e tente novamente');
       return
     }
 
     const studentData = this.studentForm.value;
-    studentData.papelId = "ALUNO"; // Aluno
+    studentData.papelId = 5; // Aluno
     let token = this.authToken.getToken()
     if (this.viewMode === 'edit') {
       studentData.id = this.studentId;
@@ -222,11 +219,13 @@ export class StudentComponent implements OnInit {
         });
       });
     } else {
+      console.log('salve')
       let body = {
         nome: studentData.name ,
-        data_nascimento: studentData.birthDate,
-        id_usuario: '',
-        id_turma: studentData.enrollments,
+        data_nascimento: moment(studentData.birthDate,'DDMMYYYY').format('YYYY-MM-DD'),
+        id_papel: studentData.papelId,
+        id_usuario: 1,
+        id_turma: studentData.enrollment,
         telefone: studentData.phone,
         genero: studentData.gender,
         estadoCivil: studentData.maritalStatus,
@@ -238,11 +237,11 @@ export class StudentComponent implements OnInit {
         logadouro: studentData.street,
         numero: studentData.number,
         cidade: studentData.city,
-        complemento: studentData.complement
+        complemento: studentData.complement,
+        senha: studentData.password
       }
 
-      this.studentService.saveStudentToken(body,token).subscribe((data) => {
-        console.log(data.alunoData[0])
+      this.studentService.saveStudentToken(body,token).subscribe(() => {
         this.snackBar.open('Aluno cadastrado com sucesso!', 'Fechar', {
           duration: 3000,
         });

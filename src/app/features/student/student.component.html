@@ -105,22 +105,8 @@
 
     <div class="form-row">
       <mat-form-field class="full-width">
-        <mat-label>Materias</mat-label>
-        <mat-select formControlName="disciplines" multiple >
-          <mat-option *ngFor="let discipline of disciplines" [value]="discipline.id">
-            {{ discipline.name }}
-          </mat-option>
-        </mat-select>
-        @if (hasError("disciplines")) {
-          <mat-error>{{ getError("disciplines") }}</mat-error>
-        }
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field class="full-width">
         <mat-label>Turma</mat-label>
-        <mat-select formControlName="enrollment" >
+        <mat-select formControlName="enrollment">
           <mat-option *ngFor="let enrollment of enrollments" [value]="enrollment.id">
             {{ enrollment.name }}
           </mat-option>
