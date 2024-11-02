@@ -31,6 +31,7 @@ import { FormValidationService } from '../../core/services/form-validation.servi
 import { NgxMaskDirective } from 'ngx-mask';
 import AuthTokenService from '../../core/services/auth-token.service';
 import moment from 'moment';
+import { ITurma } from '../../core/interfaces/turma.inteface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -58,7 +59,7 @@ export class StudentComponent implements OnInit {
   studentForm!: FormGroup;
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
-  enrollments = [] as IEnrollmentClass[];
+  enrollments = [] as ITurma[];
   viewMode: typeViewMode = 'read';
   studentId: string | null = null;
   isEditMode: boolean = false;
@@ -125,8 +126,10 @@ export class StudentComponent implements OnInit {
       complement: [''],
       enrollment: ['', [Validators.required]]
     });
-    this.enrollmentService.getEnrollments().subscribe((enrollments) => {
-      this.enrollments = enrollments;
+    let token = this.authToken.getToken()    
+    this.enrollmentService.getEnrollmentsToken(token)
+    .subscribe((enrollments) => {
+      this.enrollments = enrollments.turmaData;
     });
   }
 

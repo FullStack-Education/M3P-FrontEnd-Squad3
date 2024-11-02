@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ICourse } from '../interfaces/course.interface';
+import { IResponseTurma } from '../interfaces/response.turma.inteface';
 
 export interface IEnrollmentClass {
   id: string;
@@ -23,6 +24,7 @@ export interface IDisciplines{
 })
 export class EnrollmentService {
   private apiUrl = 'http://localhost:3000/turma';
+  private apiUrlApi = '/api/turmas';
   private disciplinesApiUrl = 'http://localhost:3000/materia';
   private coursesApiUrl = 'http://localhost:3000/curso';
 
@@ -30,6 +32,14 @@ export class EnrollmentService {
 
   getEnrollments(): Observable<IEnrollmentClass[]> {
     return this.http.get<IEnrollmentClass[]>(this.apiUrl);
+  }
+
+  getEnrollmentsToken(token:string): Observable<IResponseTurma> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.get<IResponseTurma>(this.apiUrlApi,{headers:reqHeader});
   }
 
   getEnrollmentById(id: string): Observable<IEnrollmentClass> {

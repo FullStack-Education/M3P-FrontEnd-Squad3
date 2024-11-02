@@ -108,7 +108,7 @@
         <mat-label>Turma</mat-label>
         <mat-select formControlName="enrollment">
           <mat-option *ngFor="let enrollment of enrollments" [value]="enrollment.id">
-            {{ enrollment.name }}
+            {{ enrollment.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("enrollment")) {
