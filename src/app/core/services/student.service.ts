@@ -10,6 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IResponseStudents } from '../interfaces/response.students.interface';
 import { IResponseNotaAluno } from '../interfaces/response.nota.aluno.inteface';
 import { IResponseCursoAluno } from '../interfaces/response.curso.aluno.inteface';
+import { IRequestCreateAluno } from '../interfaces/request.create.aluno.inteface';
 
 export interface IStudentEnrollment extends IEnrollmentClass {
   materiaName: string
@@ -43,6 +44,32 @@ export class StudentService {
 
     return this.http.get<IResponseStudents>(this.apiUrl, { headers: reqHeader });
   }
+  saveStudentToken(body:IRequestCreateAluno,token?: string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.post<IResponseStudents>(this.apiUrl, body,{ headers: reqHeader });
+  }
+
+  updateStudentToken(body:IRequestCreateAluno,id: number,token:string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.put<IResponseStudents>(`${this.apiUrl}/${id}`,body,{ headers: reqHeader });
+  }
+
+  deleteStudentToken(id: number,token:string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.delete<IResponseStudents>(`${this.apiUrl}/${id}`,{ headers: reqHeader });
+  }
 
 
   getStudents(): Observable<IUser[]> {
@@ -54,6 +81,15 @@ export class StudentService {
       filter((user) => user.papelId === this.studentRoleId),
       map((user) => user)
     );
+  }
+
+  getStudentByIdToken(id: string,token:string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.get<IResponseStudents>(`${this.apiUrl}/${id}`, { headers: reqHeader });
   }
 
   getNotasAlunoToken(studentId: string, token: string): Observable<IResponseNotaAluno> {

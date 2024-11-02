@@ -105,14 +105,14 @@
 
     <div class="form-row">
       <mat-form-field class="full-width">
-        <mat-label>Turmas</mat-label>
-        <mat-select formControlName="enrollments" multiple >
+        <mat-label>Turma</mat-label>
+        <mat-select formControlName="enrollment">
           <mat-option *ngFor="let enrollment of enrollments" [value]="enrollment.id">
-            {{ enrollment.name }}
+            {{ enrollment.nome }}
           </mat-option>
         </mat-select>
-        @if (hasError("enrollments")) {
-          <mat-error>{{ getError("enrollments") }}</mat-error>
+        @if (hasError("enrollment")) {
+          <mat-error>{{ getError("enrollment") }}</mat-error>
         }
       </mat-form-field>
     </div>

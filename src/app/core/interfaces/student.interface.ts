@@ -1,3 +1,19 @@
+import { ITurma } from "./turma.inteface"
+
+export interface Ipapel {
+  "id": number,
+  "nome": string
+}
+
+export interface IUsuario {
+        "id": number,
+        "nome": string,
+        "login": string,
+        "senha": string,
+        "papel": Ipapel
+}
+
+
 export interface IStudent{
   id: number,
   nome: string,
@@ -14,6 +30,8 @@ export interface IStudent{
   numero: string,
   cidade: string,
   complemento: string,
+  usuario: IUsuario,
+  turma:ITurma
 }
 
 

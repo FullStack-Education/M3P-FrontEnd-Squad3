@@ -17,6 +17,7 @@ import {
 import { CommonModule } from '@angular/common';
 import {
   EnrollmentService,
+  IDisciplines,
   IEnrollmentClass,
 } from '../../core/services/enrollment.service';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +29,10 @@ import { ActivatedRoute } from '@angular/router';
 import { StudentService, IStudentEnrollment } from '../../core/services/student.service';
 import { FormValidationService } from '../../core/services/form-validation.service';
 import { NgxMaskDirective } from 'ngx-mask';
+import AuthTokenService from '../../core/services/auth-token.service';
+import moment from 'moment';
+import { ITurma } from '../../core/interfaces/turma.inteface';
+import { IStudent } from '../../core/interfaces/student.interface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -55,7 +60,7 @@ export class StudentComponent implements OnInit {
   studentForm!: FormGroup;
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
-  enrollments = [] as IEnrollmentClass[];
+  enrollments = [] as ITurma[];
   viewMode: typeViewMode = 'read';
   studentId: string | null = null;
   isEditMode: boolean = false;
@@ -68,7 +73,8 @@ export class StudentComponent implements OnInit {
     private viaCepService: ViaCepService,
     private studentService: StudentService,
     private enrollmentService: EnrollmentService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authToken: AuthTokenService
   ) { }
 
   ngOnInit() {
@@ -119,23 +125,66 @@ export class StudentComponent implements OnInit {
       city: [{ value: '', disabled: true }],
       state: [{ value: '', disabled: true }],
       complement: [''],
-      enrollments: [[], [Validators.required]],
+      enrollment: ['', [Validators.required]],
+      iduser: [''],
     });
-    this.enrollmentService.getEnrollments().subscribe((enrollments) => {
-      this.enrollments = enrollments;
+
+    
+    let token = this.authToken.getToken()    
+    this.enrollmentService.getEnrollmentsToken(token)
+    .subscribe((enrollments) => {
+      this.enrollments = enrollments.turmaData;
     });
   }
 
+  configurarValidacaoSenha() {
+    const passwordControl = this.studentForm!.get('password');
+    if(passwordControl){
+        if (this.viewMode === 'edit') {
+          
+          passwordControl.clearValidators();
+        } else {
+          passwordControl.setValidators([Validators.required, Validators.minLength(8)]);
+          // Remove todas as validações do controle
+          
+        }
+
+        // Atualiza o estado do controle
+        passwordControl.updateValueAndValidity();
+      }
+  }
   loadStudentData(studentId: string) {
-    this.userService.getUserById(studentId).subscribe((student) => {
-      this.studentForm.patchValue(student);
+    let token = this.authToken.getToken()    
+    this.studentService.getStudentByIdToken(studentId,token).subscribe((studentResponse) => {
+
+      let student =  studentResponse.alunoData[0];
+      this.studentForm.patchValue({
+        name:student.nome,
+        birthDate:moment(student.dataNascimento, 'YYYYY-MM-DD').format('DDMMYYYY'),
+        iduser:student.usuario.id,
+        enrollment:student.turma.id,
+        phone:student.telefone ,
+        gender:student.genero ,
+        maritalStatus:student.estadoCivil,
+        email:student.email,
+        cpf:student.cpf,
+        rg:student.rg,
+        naturalness:student.naturalidade,
+        cep: student.cep,
+        logadouro: student.logadouro,
+        numero: student.numero,
+        cidade: student.cidade,
+        complemento: student.complemento,
+        password: null
+      }
+      );
     });
   }
 
   cpfValidator(control: FormControl) {
     const cpf: string = control.value;
 
-    const numbers: number[] = cpf.split('')
+    const numbers: number[] = cpf?.split('')
       .map(char => Number.parseInt(char))
       .filter(number => !Number.isNaN(number));
 
@@ -177,7 +226,7 @@ export class StudentComponent implements OnInit {
       return;
     }
     this.viaCepService.getAddressByCep(cepInput.value).subscribe((address) => {
-      console.log('address', address);
+      
 
       if ('erro' in address) {
         cepInput?.setErrors({ invalid: true });
@@ -197,23 +246,69 @@ export class StudentComponent implements OnInit {
   }
 
   onSave() {
+    
+
     if (this.studentForm.invalid) {
       this.studentForm.markAllAsTouched(this.studentForm.controls);
-      alert('Existem campos inválidos, revise e tente novamente');
       return
     }
 
     const studentData = this.studentForm.value;
-    studentData.papelId = 3; // Aluno
+    studentData.papelId = 5; // Aluno
+    let token = this.authToken.getToken()
     if (this.viewMode === 'edit') {
+      let body = {
+        nome: studentData.name ,
+        data_nascimento: moment(studentData.birthDate,'DDMMYYYY').format('YYYY-MM-DD'),
+        id_papel: studentData.papelId,
+        id_usuario: studentData.iduser,
+        id_turma: studentData.enrollment,
+        telefone: studentData.phone,
+        genero: studentData.gender,
+        estadoCivil: studentData.maritalStatus,
+        email: studentData.email,
+        cpf: studentData.cpf,
+        rg: studentData.rg,
+        naturalidade: studentData.naturalness,
+        cep: studentData.cep,
+        logadouro: studentData.street,
+        numero: studentData.number,
+        cidade: studentData.city,
+        complemento: studentData.complement,
+        senha: studentData.password
+      }
+
       studentData.id = this.studentId;
-      this.userService.setUser(studentData).subscribe(() => {
+      
+      this.studentService.updateStudentToken(body,parseInt(studentData.id),token).subscribe(() => {
         this.snackBar.open('Aluno atualizado com sucesso!', 'Fechar', {
           duration: 3000,
         });
       });
     } else {
-      this.userService.addUser(studentData).subscribe(() => {
+      
+      let body = {
+        nome: studentData.name ,
+        data_nascimento: moment(studentData.birthDate,'DDMMYYYY').format('YYYY-MM-DD'),
+        id_papel: studentData.papelId,
+        id_usuario: 1,
+        id_turma: studentData.enrollment,
+        telefone: studentData.phone,
+        genero: studentData.gender,
+        estadoCivil: studentData.maritalStatus,
+        email: studentData.email,
+        cpf: studentData.cpf,
+        rg: studentData.rg,
+        naturalidade: studentData.naturalness,
+        cep: studentData.cep,
+        logadouro: studentData.street,
+        numero: studentData.number,
+        cidade: studentData.city,
+        complemento: studentData.complement,
+        senha: studentData.password
+      }
+
+      this.studentService.saveStudentToken(body,token).subscribe(() => {
         this.snackBar.open('Aluno cadastrado com sucesso!', 'Fechar', {
           duration: 3000,
         });
@@ -225,6 +320,7 @@ export class StudentComponent implements OnInit {
   enableEdit() {
     // Logic to switch to edit mode
     this.viewMode = 'edit';
+    this.configurarValidacaoSenha()
     this.studentForm.enable();
   }
 
@@ -240,7 +336,8 @@ export class StudentComponent implements OnInit {
 
   onDelete() {
     if (!this.studentId) return;
-    this.userService.deleteUser(this.studentId).subscribe(() => {
+    let token = this.authToken.getToken()
+    this.studentService.deleteStudentToken(parseInt(this.studentId),token).subscribe(() => {
       this.snackBar.open('Aluno excluído com sucesso!', 'Fechar', {
         duration: 3000,
       });
