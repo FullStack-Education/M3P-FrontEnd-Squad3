@@ -62,6 +62,15 @@ export class StudentService {
     return this.http.put<IResponseStudents>(`${this.apiUrl}/${id}`,body,{ headers: reqHeader });
   }
 
+  deleteStudentToken(id: number,token:string): Observable<IResponseStudents> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.delete<IResponseStudents>(`${this.apiUrl}/${id}`,{ headers: reqHeader });
+  }
+
 
   getStudents(): Observable<IUser[]> {
     return this.userService.getUsersByRole(this.studentRoleId);

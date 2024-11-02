@@ -336,7 +336,8 @@ export class StudentComponent implements OnInit {
 
   onDelete() {
     if (!this.studentId) return;
-    this.userService.deleteUser(this.studentId).subscribe(() => {
+    let token = this.authToken.getToken()
+    this.studentService.deleteStudentToken(parseInt(this.studentId),token).subscribe(() => {
       this.snackBar.open('Aluno excluído com sucesso!', 'Fechar', {
         duration: 3000,
       });
