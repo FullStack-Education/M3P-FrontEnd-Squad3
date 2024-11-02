@@ -17,6 +17,7 @@ import {
 import { CommonModule } from '@angular/common';
 import {
   EnrollmentService,
+  IDisciplines,
   IEnrollmentClass,
 } from '../../core/services/enrollment.service';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +29,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StudentService, IStudentEnrollment } from '../../core/services/student.service';
 import { FormValidationService } from '../../core/services/form-validation.service';
 import { NgxMaskDirective } from 'ngx-mask';
+import AuthTokenService from '../../core/services/auth-token.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -56,6 +58,7 @@ export class StudentComponent implements OnInit {
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
   enrollments = [] as IEnrollmentClass[];
+  disciplines = [] as IDisciplines[];
   viewMode: typeViewMode = 'read';
   studentId: string | null = null;
   isEditMode: boolean = false;
@@ -68,7 +71,8 @@ export class StudentComponent implements OnInit {
     private viaCepService: ViaCepService,
     private studentService: StudentService,
     private enrollmentService: EnrollmentService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authToken: AuthTokenService
   ) { }
 
   ngOnInit() {
@@ -119,7 +123,8 @@ export class StudentComponent implements OnInit {
       city: [{ value: '', disabled: true }],
       state: [{ value: '', disabled: true }],
       complement: [''],
-      enrollments: [[], [Validators.required]],
+      enrollment: ['', [Validators.required]],
+      disciplines: [[], [Validators.required]],
     });
     this.enrollmentService.getEnrollments().subscribe((enrollments) => {
       this.enrollments = enrollments;
@@ -197,6 +202,9 @@ export class StudentComponent implements OnInit {
   }
 
   onSave() {
+    
+    console.log(this.studentForm.value)
+
     if (this.studentForm.invalid) {
       this.studentForm.markAllAsTouched(this.studentForm.controls);
       alert('Existem campos inválidos, revise e tente novamente');
@@ -204,7 +212,8 @@ export class StudentComponent implements OnInit {
     }
 
     const studentData = this.studentForm.value;
-    studentData.papelId = 3; // Aluno
+    studentData.papelId = "ALUNO"; // Aluno
+    let token = this.authToken.getToken()
     if (this.viewMode === 'edit') {
       studentData.id = this.studentId;
       this.userService.setUser(studentData).subscribe(() => {
@@ -213,7 +222,27 @@ export class StudentComponent implements OnInit {
         });
       });
     } else {
-      this.userService.addUser(studentData).subscribe(() => {
+      let body = {
+        nome: studentData.name ,
+        data_nascimento: studentData.birthDate,
+        id_usuario: '',
+        id_turma: studentData.enrollments,
+        telefone: studentData.phone,
+        genero: studentData.gender,
+        estadoCivil: studentData.maritalStatus,
+        email: studentData.email,
+        cpf: studentData.cpf,
+        rg: studentData.rg,
+        naturalidade: studentData.naturalness,
+        cep: studentData.cep,
+        logadouro: studentData.street,
+        numero: studentData.number,
+        cidade: studentData.city,
+        complemento: studentData.complement
+      }
+
+      this.studentService.saveStudentToken(body,token).subscribe((data) => {
+        console.log(data.alunoData[0])
         this.snackBar.open('Aluno cadastrado com sucesso!', 'Fechar', {
           duration: 3000,
         });
