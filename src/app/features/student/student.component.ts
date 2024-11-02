@@ -32,6 +32,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import AuthTokenService from '../../core/services/auth-token.service';
 import moment from 'moment';
 import { ITurma } from '../../core/interfaces/turma.inteface';
+import { IStudent } from '../../core/interfaces/student.interface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -124,8 +125,11 @@ export class StudentComponent implements OnInit {
       city: [{ value: '', disabled: true }],
       state: [{ value: '', disabled: true }],
       complement: [''],
-      enrollment: ['', [Validators.required]]
+      enrollment: ['', [Validators.required]],
+      iduser: [''],
     });
+
+    
     let token = this.authToken.getToken()    
     this.enrollmentService.getEnrollmentsToken(token)
     .subscribe((enrollments) => {
@@ -133,9 +137,47 @@ export class StudentComponent implements OnInit {
     });
   }
 
+  configurarValidacaoSenha() {
+    const passwordControl = this.studentForm!.get('password');
+    if(passwordControl){
+        if (this.viewMode === 'edit') {
+          
+          passwordControl.clearValidators();
+        } else {
+          passwordControl.setValidators([Validators.required, Validators.minLength(8)]);
+          // Remove todas as validações do controle
+          
+        }
+
+        // Atualiza o estado do controle
+        passwordControl.updateValueAndValidity();
+      }
+  }
   loadStudentData(studentId: string) {
-    this.userService.getUserById(studentId).subscribe((student) => {
-      this.studentForm.patchValue(student);
+    let token = this.authToken.getToken()    
+    this.studentService.getStudentByIdToken(studentId,token).subscribe((studentResponse) => {
+
+      let student =  studentResponse.alunoData[0];
+      this.studentForm.patchValue({
+        name:student.nome,
+        birthDate:moment(student.dataNascimento, 'YYYYY-MM-DD').format('DDMMYYYY'),
+        iduser:student.usuario.id,
+        enrollment:student.turma.id,
+        phone:student.telefone ,
+        gender:student.genero ,
+        maritalStatus:student.estadoCivil,
+        email:student.email,
+        cpf:student.cpf,
+        rg:student.rg,
+        naturalness:student.naturalidade,
+        cep: student.cep,
+        logadouro: student.logadouro,
+        numero: student.numero,
+        cidade: student.cidade,
+        complemento: student.complemento,
+        password: null
+      }
+      );
     });
   }
 
@@ -184,7 +226,7 @@ export class StudentComponent implements OnInit {
       return;
     }
     this.viaCepService.getAddressByCep(cepInput.value).subscribe((address) => {
-      console.log('address', address);
+      
 
       if ('erro' in address) {
         cepInput?.setErrors({ invalid: true });
@@ -215,14 +257,36 @@ export class StudentComponent implements OnInit {
     studentData.papelId = 5; // Aluno
     let token = this.authToken.getToken()
     if (this.viewMode === 'edit') {
+      let body = {
+        nome: studentData.name ,
+        data_nascimento: moment(studentData.birthDate,'DDMMYYYY').format('YYYY-MM-DD'),
+        id_papel: studentData.papelId,
+        id_usuario: studentData.iduser,
+        id_turma: studentData.enrollment,
+        telefone: studentData.phone,
+        genero: studentData.gender,
+        estadoCivil: studentData.maritalStatus,
+        email: studentData.email,
+        cpf: studentData.cpf,
+        rg: studentData.rg,
+        naturalidade: studentData.naturalness,
+        cep: studentData.cep,
+        logadouro: studentData.street,
+        numero: studentData.number,
+        cidade: studentData.city,
+        complemento: studentData.complement,
+        senha: studentData.password
+      }
+
       studentData.id = this.studentId;
-      this.userService.setUser(studentData).subscribe(() => {
+      
+      this.studentService.updateStudentToken(body,parseInt(studentData.id),token).subscribe(() => {
         this.snackBar.open('Aluno atualizado com sucesso!', 'Fechar', {
           duration: 3000,
         });
       });
     } else {
-      console.log('salve')
+      
       let body = {
         nome: studentData.name ,
         data_nascimento: moment(studentData.birthDate,'DDMMYYYY').format('YYYY-MM-DD'),
@@ -256,6 +320,7 @@ export class StudentComponent implements OnInit {
   enableEdit() {
     // Logic to switch to edit mode
     this.viewMode = 'edit';
+    this.configurarValidacaoSenha()
     this.studentForm.enable();
   }
 
