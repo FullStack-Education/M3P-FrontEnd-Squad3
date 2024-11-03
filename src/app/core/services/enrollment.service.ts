@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ICourse } from '../interfaces/course.interface';
 import { IResponseTurma } from '../interfaces/response.turma.inteface';
+import { IResponseMaterias } from '../interfaces/response.materias.inteface';
 
 export interface IEnrollmentClass {
   id: string;
@@ -26,8 +27,9 @@ export class EnrollmentService {
   private apiUrl = 'http://localhost:3000/turma';
   private apiUrlApi = '/api/turmas';
   private disciplinesApiUrl = 'http://localhost:3000/materia';
+  private ApiUrldisciplines = '/api/materias';
   private coursesApiUrl = 'http://localhost:3000/curso';
-
+  
   constructor(private http: HttpClient) {}
 
   getEnrollments(): Observable<IEnrollmentClass[]> {
@@ -69,6 +71,14 @@ export class EnrollmentService {
 
   getDisciplines(): Observable<IDisciplines[]> {
     return this.http.get<IDisciplines[]>(this.disciplinesApiUrl);
+  }
+  
+  getDisciplinesToken(token:string): Observable<IResponseMaterias> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.get<IResponseMaterias>(this.ApiUrldisciplines,{headers:reqHeader});
   }
 
   getDisciplineById(id: string): Observable<IDisciplines> {
