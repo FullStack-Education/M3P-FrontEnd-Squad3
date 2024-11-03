@@ -25,6 +25,6 @@ export interface ITeacher {
     cpf: string,
     rg: string,
     usuario:IUsuario,
-    materias:IMateria
+    materias:IMateria[]
   
 }

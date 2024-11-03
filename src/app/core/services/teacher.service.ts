@@ -34,8 +34,17 @@ export class TeacherService {
     return this.http.get<IResponseTeachers>(this.apiUrl, { headers: reqHeader });
   }
 
+  getUpdateTeachersToken(id:number,body:any,token?: string): Observable<IResponseTeachers> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
 
-  getCreateTeachersToken(body:IRequestCreateTeacher,token?: string): Observable<IResponseTeachers> {
+    return this.http.put<IResponseTeachers>(`${this.apiUrl}/${id}`, body,{ headers: reqHeader });
+  }
+
+
+  getCreateTeachersToken(body:any,token?: string): Observable<IResponseTeachers> {
     const reqHeader = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
