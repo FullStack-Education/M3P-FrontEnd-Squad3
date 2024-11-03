@@ -15,12 +15,12 @@
 
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-        <mat-cell *matCellDef="let teacher"> {{ teacher.name }} </mat-cell>
+        <mat-cell *matCellDef="let teacher"> {{ teacher.nome }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="phone">
         <mat-header-cell *matHeaderCellDef> Telefone </mat-header-cell>
-        <mat-cell *matCellDef="let teacher"> {{ teacher.phone }} </mat-cell>
+        <mat-cell *matCellDef="let teacher"> {{ teacher.telefone | PhonePipe}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="email">

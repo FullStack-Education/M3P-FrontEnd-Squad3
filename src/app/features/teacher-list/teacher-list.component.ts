@@ -7,8 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { IUser as  ITeacher } from '../../core/interfaces/user.interface';
+
 import { MatTableModule } from '@angular/material/table';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { TeacherService } from '../../core/services/teacher.service';
+import { IResponseTeachers } from '../../core/interfaces/response.teacher.interface';
+import { ITeacher } from '../../core/interfaces/teacher.interface';
+import { PhonePipe } from '../../core/pipes/phone.pipe';
 
 
 @Component({
@@ -22,6 +27,7 @@ import { MatTableModule } from '@angular/material/table';
     MatInputModule,
     FormsModule,
     MatTableModule,
+    PhonePipe
   ],
   templateUrl: './teacher-list.component.html',
   styleUrl: './teacher-list.component.scss',
@@ -32,12 +38,18 @@ export class TeacherListComponent implements OnInit {
   searchQuery: string = '';
   displayedColumns: string[] = ['id', 'name', 'phone', 'email', 'actions'];
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private teacherService: TeacherService, 
+    private router: Router,
+    private authToken: AuthTokenService
+  ) {}
 
   ngOnInit() {
-    this.userService.getAllTeachers().subscribe((data: ITeacher[]) => {
-      this.teachers = data;
-      this.filteredTeachers = data;
+    let token  = this.authToken.getToken();
+    this.teacherService.getAllTeachersToken(token)
+    .subscribe((data: IResponseTeachers) => {
+      this.teachers = data.docenteData;
+      this.filteredTeachers = data.docenteData;
     });
   }
 
@@ -45,7 +57,7 @@ export class TeacherListComponent implements OnInit {
     if (this.searchQuery) {
       this.filteredTeachers = this.teachers.filter(
         (teacher) =>
-          teacher.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          teacher.nome.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           teacher.id.toString().includes(this.searchQuery)
       );
     } else {
