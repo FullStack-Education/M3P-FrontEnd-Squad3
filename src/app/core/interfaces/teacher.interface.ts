@@ -1,4 +1,10 @@
+import { IUsuario } from "./student.interface";
 
+
+export interface IMateria {
+  id:number,
+  nome:string
+}
 
 export interface ITeacher {
     id: number,
@@ -17,6 +23,8 @@ export interface ITeacher {
     estado: string,
     complemento: string,
     cpf: string,
-    rg: string
+    rg: string,
+    usuario:IUsuario,
+    materias:IMateria
   
 }

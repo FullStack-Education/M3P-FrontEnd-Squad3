@@ -1,0 +1,21 @@
+export interface IRequestCreateTeacher {
+    nome: string,
+    data_entrada: string,
+    telefone: string,
+    genero: string,
+    estadoCivil: string,
+    data_nascimento: string,
+    email: string,
+    CPF: string,
+    RG: string,
+    naturalidade: string,
+    cep: string,
+    logadouro: string,
+    numero: string,
+    cidade: string,
+    complemento: string
+    id_usuario: number,
+    id_papel: number,
+    id_materias: number,
+    estatdo: string,
+  }
