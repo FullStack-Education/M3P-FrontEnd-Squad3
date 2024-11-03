@@ -109,7 +109,7 @@
         <mat-label>Matérias</mat-label>
         <mat-select formControlName="subjects" multiple >
           <mat-option *ngFor="let subject of subjects" [value]="subject.id">
-            {{ subject.name }}
+            {{ subject.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("subjects")) {

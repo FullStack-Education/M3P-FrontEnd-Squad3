@@ -12,6 +12,7 @@ import { IResponseNotaAluno } from '../interfaces/response.nota.aluno.inteface';
 import { IResponseCursoAluno } from '../interfaces/response.curso.aluno.inteface';
 import { IRequestCreateAluno } from '../interfaces/request.create.aluno.inteface';
 import { IResponseTeachers } from '../interfaces/response.teacher.interface';
+import { IRequestCreateTeacher } from '../interfaces/request.create.teacher.inteface';
 
 
 @Injectable({
@@ -31,6 +32,44 @@ export class TeacherService {
     })
 
     return this.http.get<IResponseTeachers>(this.apiUrl, { headers: reqHeader });
+  }
+
+  getUpdateTeachersToken(id:number,body:any,token?: string): Observable<IResponseTeachers> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.put<IResponseTeachers>(`${this.apiUrl}/${id}`, body,{ headers: reqHeader });
+  }
+
+
+  getCreateTeachersToken(body:any,token?: string): Observable<IResponseTeachers> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.post<IResponseTeachers>(this.apiUrl, body,{ headers: reqHeader });
+  }
+
+  getTeacherToken(id:number ,token?: string): Observable<IResponseTeachers> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.get<IResponseTeachers>(`${this.apiUrl}/${id}`, { headers: reqHeader });
+  }
+
+
+  getDeleteTeacherToken(id:number ,token?: string): Observable<IResponseTeachers> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+
+    return this.http.delete<IResponseTeachers>(`${this.apiUrl}/${id}`, { headers: reqHeader });
   }
   
 }
