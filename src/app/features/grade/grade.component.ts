@@ -29,6 +29,7 @@ import AuthTokenService from '../../core/services/auth-token.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ITeacher } from '../../core/interfaces/teacher.interface';
 import { ITurma } from '../../core/interfaces/turma.inteface';
+import { IMateria } from '../../core/interfaces/response.materias.inteface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 @Component({
@@ -57,7 +58,7 @@ export class GradeComponent implements OnInit {
   gradeForm: FormGroup;
   teachers: ITeacher[] = [];
   enrollments = [] as ITurma[];
-  disciplines = [] as IDisciplines[];
+  disciplines = [] as IMateria[];
   students: IUser[] = [];
   filteredStudents?: Observable<IUser[]>;
   selectedEnrollment: string | null = null;
@@ -149,9 +150,9 @@ export class GradeComponent implements OnInit {
     });
 
     this.enrollmentService
-      .getDisciplines()
-      .subscribe((data: IDisciplines[]) => {
-        this.disciplines = data;
+      .getDisciplinesToken(this.token)
+      .subscribe((data) => {
+        this.disciplines = data.materiaData;
       });
   }
 
