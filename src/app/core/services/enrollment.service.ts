@@ -48,19 +48,33 @@ export class EnrollmentService {
     return this.http.get<IEnrollmentClass>(`${this.apiUrl}/${id}`);
   }
 
-  addEnrollment(newClass: IEnrollmentClass): Observable<IEnrollmentClass> {
-    return this.http.post<IEnrollmentClass>(this.apiUrl, newClass);
+  addEnrollment(body:any, token:string): Observable<IResponseTurma> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.post<IResponseTurma>(this.apiUrlApi, body, {headers:reqHeader});
   }
   
-  setEnrollment(enrollment: IEnrollmentClass): Observable<IEnrollmentClass> {
-    return this.http.put<IEnrollmentClass>(
-      `${this.apiUrl}/${enrollment.id}`,
-      enrollment
+  setEnrollment(id:number,body:any, token:string): Observable<IResponseTurma> {
+
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.put<IResponseTurma>(
+      `${this.apiUrlApi}/${id}`,
+      body,
+      {headers:reqHeader}
     );
   }
 
-  deleteEnrollment(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteEnrollment(id: string,token:string): Observable<void> {
+    const reqHeader = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.delete<void>(`${this.apiUrlApi}/${id}`,{headers:reqHeader});
   }
 
   getEnrollmentCount(): Observable<number> {

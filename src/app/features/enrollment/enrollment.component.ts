@@ -32,6 +32,7 @@ import { coursesService } from '../../core/services/courses.service';
 import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ITeacher } from '../../core/interfaces/teacher.interface';
+import moment from 'moment';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -60,7 +61,7 @@ export class EnrollmentComponent implements OnInit {
   filteredTeachers: ITeacher[] = [];
   filteredCourses: ICursoAluno[] = [];
   viewMode: typeViewMode = 'read';
-  enrollmentId: string | null = null;
+  enrollmentId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -83,7 +84,7 @@ export class EnrollmentComponent implements OnInit {
       this.viewMode = 'insert';
       this.enrollmentForm.enable();
     } else {
-      this.enrollmentId = paramEnrollmentId;
+      this.enrollmentId = parseInt(paramEnrollmentId);
       this.loadEnrollmentData(this.enrollmentId);
       const viewModeParam =
         this.route.snapshot.queryParamMap.get('mode') || 'read';
@@ -123,8 +124,8 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
-  loadEnrollmentData(enrollmentId: string) {    
-    this.enrollmentService.getEnrollmentById(enrollmentId).subscribe((enrollment) => {
+  loadEnrollmentData(enrollmentId: string|number) {    
+    this.enrollmentService.getEnrollmentById(enrollmentId.toString()).subscribe((enrollment) => {
       this.enrollmentForm.patchValue(enrollment);
     });
   }
@@ -164,22 +165,33 @@ export class EnrollmentComponent implements OnInit {
       alert('Existem campos inválidos, revise e tente novamente');
       return;
     }
+    const token = this.authtoken.getToken()
 
     const enrollmentData = this.enrollmentForm.value;
+  
+
+    let body = {
+      "nome": enrollmentData.name,
+      "id_curso": enrollmentData.course,
+      "hora": enrollmentData.timeStart,
+      "dataFim": enrollmentData.dateEnd,
+      "dataInicio": enrollmentData.dateStart,
+      "id_professor": enrollmentData.teacher
+    }
     if (this.viewMode === 'edit') {
       enrollmentData.id = this.enrollmentId;
-      this.enrollmentService.setEnrollment(enrollmentData).subscribe(() => {
+      this.enrollmentService.setEnrollment(enrollmentData.id,body,token).subscribe(() => {
         this.snackBar.open('Turma atualizada com sucesso!', 'Fechar', {
           duration: 3000,
         });
         this.enrollmentForm.disable();
       });
     } else {
-      this.enrollmentService.addEnrollment(enrollmentData).subscribe((newEnrollment) => {
+      this.enrollmentService.addEnrollment(body,token).subscribe((newEnrollment) => {
         this.snackBar.open('Turma cadastrada com sucesso!', 'Fechar', {
           duration: 3000,
         });
-        this.enrollmentId = newEnrollment.id;
+        this.enrollmentId = newEnrollment.turmaData[0].id;
         this.enrollmentForm.disable();
       });
     }
@@ -202,7 +214,8 @@ export class EnrollmentComponent implements OnInit {
 
   onDelete() {
     if (!this.enrollmentId) return;
-    this.userService.deleteUser(this.enrollmentId).subscribe(() => {
+    const token = this.authtoken.getToken()
+    this.teacherService.getDeleteTeacherToken(this.enrollmentId,token).subscribe(() => {
       this.snackBar.open('Turma excluída com sucesso!', 'Fechar', {
         duration: 3000,
       });
