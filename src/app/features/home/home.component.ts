@@ -178,7 +178,7 @@ export class HomeComponent {
   }
 
   isCurrentUserTeacher(): boolean {
-    return this.currentUser?.scope === "PEDAGOGICO";
+    return this.currentUser?.scope === "PEDAGOGICO" || this.currentUser?.scope === "PROFESSOR"
   }
 
   isCurrentUserStudent(): boolean {
