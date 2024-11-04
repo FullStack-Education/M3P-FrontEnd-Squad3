@@ -49,7 +49,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             *ngFor="let enrollment of enrollments"
             [value]="enrollment.id"
           >
-            {{ enrollment.name }}
+            {{ enrollment.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("enrollment")) {
@@ -67,7 +67,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             *ngFor="let discipline of disciplines"
             [value]="discipline.id"
           >
-            {{ discipline.name }}
+            {{ discipline.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("discipline")) {
@@ -80,7 +80,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
         <mat-label>Professor</mat-label>
         <mat-select formControlName="teacher">
           <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
-            {{ teacher.name }}
+            {{ teacher.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("teacher")) {
@@ -121,7 +121,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
         <input type="text" matInput formControlName="student" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStudentsFn">
           <mat-option *ngFor="let student of filteredStudents | async" [value]="student">
-            {{ student.name }}
+            {{ student.nome }}
           </mat-option>
         </mat-autocomplete>
         @if (hasError("student")) {
