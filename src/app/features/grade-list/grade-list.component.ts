@@ -53,7 +53,7 @@ export class GradeListComponent implements OnInit {
     this.student = this.authService.getCurrentUser();
     const token: string = this.authTokenService.getToken();
     this.studentService
-      .getNotasAlunoToken(this.student.id_usuario, token)
+      .getNotasAlunoToken(this.student.id_aluno, token)
       .subscribe((response: IResponseNotaAluno) => {      
         
         const data: IStudentGrade[] = response.notaData.map((nota: INota) => ({
