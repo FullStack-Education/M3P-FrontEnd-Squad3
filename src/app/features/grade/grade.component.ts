@@ -25,6 +25,9 @@ import moment from 'moment';
 import { map, Observable, startWith } from 'rxjs';
 import { GradeService } from '../../core/services/grade.service';
 import { FormValidationService } from '../../core/services/form-validation.service';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { TeacherService } from '../../core/services/teacher.service';
+import { ITeacher } from '../../core/interfaces/teacher.interface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 @Component({
@@ -51,7 +54,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
 })
 export class GradeComponent implements OnInit {
   gradeForm: FormGroup;
-  teachers: IUser[] = [];
+  teachers: ITeacher[] = [];
   enrollments = [] as IEnrollmentClass[];
   disciplines = [] as IDisciplines[];
   students: IUser[] = [];
@@ -59,6 +62,9 @@ export class GradeComponent implements OnInit {
   selectedEnrollment: string | null = null;
   viewMode: typeViewMode = 'read';
   gradeId: string | null = null;
+  token!:string;
+  currentTeacher:ITeacher|null = null 
+
 
   constructor(
     private fb: FormBuilder,
@@ -69,7 +75,9 @@ export class GradeComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private gradeService: GradeService
+    private gradeService: GradeService,
+    private authtoken: AuthTokenService,
+    private teacherService: TeacherService,
   ) {
     this.gradeForm = this.fb.group({
       teacher: ['', Validators.required],
@@ -80,6 +88,8 @@ export class GradeComponent implements OnInit {
       student: ['', Validators.required],
       grade: ['', [Validators.required, Validators.min(0), Validators.max(10)]],
     });
+
+    this.token = this.authtoken.getToken()
   }
 
   ngOnInit() {
@@ -108,14 +118,18 @@ export class GradeComponent implements OnInit {
 
   loadInitialData() {
     if (this.authService.isAdmin()) {
-      this.userService.getAllTeachers().subscribe((data: IUser[]) => {
-        this.teachers = data;
+      this.teacherService.getAllTeachersToken(this.token).subscribe((data) => {
+        this.teachers = data.docenteData;
       });
     } else if (this.authService.isTeacher()) {
-      const currentTeacher = this.authService.getCurrentUser();
-      this.teachers = [];
-      this.gradeForm.get('teacher')?.setValue(currentTeacher.id_usuario);
-      this.gradeForm.get('teacher')?.disable();
+      let clain = this.authtoken.decodePayloadJWT()
+      this.teacherService.getTeacherByIdToken(clain.id_docente,this.token).subscribe((data) => {
+        this.teachers = data.docenteData;
+        this.teachers = [];
+        this.gradeForm.get('teacher')?.setValue(clain.id_docente);
+        this.gradeForm.get('teacher')?.disable(); 
+      });
+  
     }
 
     this.enrollmentService

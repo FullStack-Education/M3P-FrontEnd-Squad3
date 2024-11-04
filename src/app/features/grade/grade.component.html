@@ -80,7 +80,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
         <mat-label>Professor</mat-label>
         <mat-select formControlName="teacher">
           <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
-            {{ teacher.name }}
+            {{ teacher.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("teacher")) {
