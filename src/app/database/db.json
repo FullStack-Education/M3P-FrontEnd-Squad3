@@ -15,13 +15,26 @@
   ],
   "usuario": [
     {
-      "id": "1",
-      "name": "Alice De Santiago",
-      "papelId": "1",
-      "password": "123456",
-      "age": "20",
-      "phone": "123456789",
-      "email":"admin@email"
+      "name": "joao vitor",
+      "gender": "outro",
+      "birthDate": "02112024",
+      "cpf": "88888888888",
+      "rg": "4444444",
+      "maritalStatus": "solteiro",
+      "phone": "48999999999",
+      "email": "mail@mail.com",
+      "password": null,
+      "naturalness": "brasileiro",
+      "cep": "88000000",
+      "street": "Rua Carlos Steinmetz",
+      "number": "",
+      "city": "Palhoça",
+      "state": "SC",
+      "complement": "casa",
+      "enrollment": 1,
+      "iduser": 13,
+      "papelId": 5,
+      "id": "1"
     },
     {
       "name": "Bob from Hallmark",
@@ -95,12 +108,30 @@
       "phone": "123456789"
     },
     {
-      "id": "7",
-      "name": "Svalta from Denmark",
-      "papelId": "3",
-      "password": "123456",
-      "age": "20",
-      "phone": "123456789"
+      "name": "leandro dias 2",
+      "gender": "M",
+      "birthDate": "04042024",
+      "cpf": "88888888888",
+      "rg": "998398",
+      "maritalStatus": "S",
+      "phone": "48999999999",
+      "email": "leandroDias@mail.com",
+      "password": "",
+      "naturalness": "brasileiro",
+      "cep": "88134000",
+      "street": "rua sei lah ",
+      "number": "452",
+      "city": "palhoça",
+      "state": "SC",
+      "complement": "casa",
+      "idPapel": "",
+      "subjects": [
+        1,
+        2,
+        4
+      ],
+      "papelId": 2,
+      "id": "7"
     },
     {
       "id": "8",
@@ -192,6 +223,33 @@
       "timeStart": "06:00",
       "teacher": "11",
       "papelId": "2"
+    },
+    {
+      "id": "d0a3",
+      "name": "leandro dias",
+      "gender": "M",
+      "birthDate": "04042024",
+      "cpf": "88888888888",
+      "rg": "484684684",
+      "maritalStatus": "single",
+      "phone": "48999999999",
+      "email": "leandrodias@maIL.COM",
+      "password": "123456789",
+      "naturalness": "brasileiro",
+      "cep": "88134000",
+      "street": "Rodovia BR-101",
+      "number": "",
+      "city": "Palhoça",
+      "state": "SC",
+      "complement": "asas",
+      "idPapel": "",
+      "subjects": [
+        1,
+        3,
+        4,
+        5
+      ],
+      "papelId": 2
     }
   ],
   "docente": [
