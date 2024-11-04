@@ -121,7 +121,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
         <input type="text" matInput formControlName="student" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStudentsFn">
           <mat-option *ngFor="let student of filteredStudents | async" [value]="student">
-            {{ student.name }}
+            {{ student.nome }}
           </mat-option>
         </mat-autocomplete>
         @if (hasError("student")) {

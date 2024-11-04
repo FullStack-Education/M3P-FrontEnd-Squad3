@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IGrade } from '../interfaces/grade.interface';
+import { IResponseNota } from '../interfaces/response.nota.inteface';
 
 
 @Injectable({
@@ -23,12 +24,12 @@ export class GradeService {
     return this.http.get<IGrade[]>(`${this.apiUrlApi}/${id}`, {headers:reqHeader});
   }
 
-  addGradeToken(body:any,token:string): Observable<IGrade[]> {
+  addGradeToken(body:any,token:string): Observable<IResponseNota> {
     const reqHeader = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     })
-    return this.http.post<IGrade[]>(`${this.apiUrlApi}`,body, {headers:reqHeader});
+    return this.http.post<IResponseNota>(`${this.apiUrlApi}`,body, {headers:reqHeader});
   }
 
   setGradeToken(id:number,body:any,token:string): Observable<IGrade[]> {
