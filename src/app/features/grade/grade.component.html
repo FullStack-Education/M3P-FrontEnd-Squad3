@@ -49,7 +49,7 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             *ngFor="let enrollment of enrollments"
             [value]="enrollment.id"
           >
-            {{ enrollment.name }}
+            {{ enrollment.nome }}
           </mat-option>
         </mat-select>
         @if (hasError("enrollment")) {

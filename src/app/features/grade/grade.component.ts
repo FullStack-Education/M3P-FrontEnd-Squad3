@@ -28,6 +28,7 @@ import { FormValidationService } from '../../core/services/form-validation.servi
 import AuthTokenService from '../../core/services/auth-token.service';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ITeacher } from '../../core/interfaces/teacher.interface';
+import { ITurma } from '../../core/interfaces/turma.inteface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 @Component({
@@ -55,7 +56,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
 export class GradeComponent implements OnInit {
   gradeForm: FormGroup;
   teachers: ITeacher[] = [];
-  enrollments = [] as IEnrollmentClass[];
+  enrollments = [] as ITurma[];
   disciplines = [] as IDisciplines[];
   students: IUser[] = [];
   filteredStudents?: Observable<IUser[]>;
@@ -133,9 +134,9 @@ export class GradeComponent implements OnInit {
     }
 
     this.enrollmentService
-      .getEnrollments()
-      .subscribe((data: IEnrollmentClass[]) => {
-        this.enrollments = data;
+      .getEnrollmentsToken(this.token)
+      .subscribe((data) => {
+        this.enrollments = data.turmaData;
         console.log('Enrollments:', this.enrollments);
       });
 
