@@ -64,6 +64,6 @@ export class AuthService {
 
   isTeacher() {
     const user = this.getCurrentUser();
-    return user?.scope === "PEDAGOGICO";
+    return user?.scope === "PEDAGOGICO" || user?.scope === "PROFESSOR";
   }
 }
