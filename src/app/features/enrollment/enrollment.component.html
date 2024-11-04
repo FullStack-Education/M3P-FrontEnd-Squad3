@@ -17,7 +17,7 @@
         <mat-label>Curso</mat-label>
         <mat-select formControlName="course" [disableOptionCentering]="true">
           <mat-option *ngFor="let course of filteredCourses" [value]="course.id">
-            {{ course.name }}
+            {{ course.nome }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="hasError('course')">
@@ -29,7 +29,7 @@
         <mat-label>Professor</mat-label>
         <mat-select formControlName="teacher" [disableOptionCentering]="true">
           <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher.id">
-            {{ teacher.name }}
+            {{ teacher.nome }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="hasError('teacher')">

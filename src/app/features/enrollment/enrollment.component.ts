@@ -27,6 +27,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { IUser } from '../../core/interfaces/user.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
 import { ICourse } from '../../core/interfaces/course.interface';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { coursesService } from '../../core/services/courses.service';
+import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
+import { TeacherService } from '../../core/services/teacher.service';
+import { ITeacher } from '../../core/interfaces/teacher.interface';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -50,10 +55,10 @@ type typeViewMode = 'read' | 'insert' | 'edit';
 })
 export class EnrollmentComponent implements OnInit {
   enrollmentForm!: FormGroup;
-  teachers = [] as IUser[];
-  courses: ICourse[] = [];
-  filteredTeachers: IUser[] = [];
-  filteredCourses: ICourse[] = [];
+  teachers = [] as ITeacher[];
+  courses: ICursoAluno[] = [];
+  filteredTeachers: ITeacher[] = [];
+  filteredCourses: ICursoAluno[] = [];
   viewMode: typeViewMode = 'read';
   enrollmentId: string | null = null;
 
@@ -65,7 +70,10 @@ export class EnrollmentComponent implements OnInit {
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute,
     private router : Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private authtoken:  AuthTokenService,
+    private coursesService: coursesService,
+    private teacherService: TeacherService,
   ) {}
 
   ngOnInit() {
@@ -109,8 +117,9 @@ export class EnrollmentComponent implements OnInit {
       teacher: [{value: '', disabled: this.isCurrentUserTeacher() }, Validators.required],
       course: ['', Validators.required],
     });
-    this.userService.getAllTeachers().subscribe((teachers) => {
-      this.teachers = teachers;
+    const token = this.authtoken.getToken()
+    this.teacherService.getAllTeachersToken(token).subscribe((teachers) => {
+      this.teachers = teachers.docenteData;
     });
   }
 
@@ -121,16 +130,18 @@ export class EnrollmentComponent implements OnInit {
   }
 
   loadTeachers() {
-    this.userService.getAllTeachers().subscribe((teachers) => {
-      this.teachers = teachers;
-      this.filteredTeachers = teachers;
+    const token = this.authtoken.getToken()
+    this.teacherService.getAllTeachersToken(token).subscribe((teachers) => {
+      this.teachers = teachers.docenteData;
+      this.filteredTeachers = teachers.docenteData;
     });
   }
 
   loadCourses() {
-    this.enrollmentService.getCourses().subscribe((courses) => {
-      this.courses = courses;
-      this.filteredCourses = courses;
+    const token = this.authtoken.getToken()
+    this.coursesService.getCources(token).subscribe((courses) => {
+      this.courses = courses.cursoData;
+      this.filteredCourses = courses.cursoData;
     });
   }
 
