@@ -70,12 +70,12 @@ export class EnrollmentComponent implements OnInit {
     private snackBar: MatSnackBar,
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute,
-    private router : Router,
+    private router: Router,
     private authService: AuthService,
-    private authtoken:  AuthTokenService,
+    private authtoken: AuthTokenService,
     private coursesService: coursesService,
     private teacherService: TeacherService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     const paramEnrollmentId = this.route.snapshot.queryParamMap.get('id');
@@ -115,7 +115,7 @@ export class EnrollmentComponent implements OnInit {
           Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
         ],
       ],
-      teacher: [{value: '', disabled: this.isCurrentUserTeacher() }, Validators.required],
+      teacher: [{ value: '', disabled: this.isCurrentUserTeacher() }, Validators.required],
       course: ['', Validators.required],
     });
     const token = this.authtoken.getToken()
@@ -124,7 +124,7 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
-  loadEnrollmentData(enrollmentId: string|number) {    
+  loadEnrollmentData(enrollmentId: string | number) {
     this.enrollmentService.getEnrollmentById(enrollmentId.toString()).subscribe((enrollment) => {
       this.enrollmentForm.patchValue(enrollment);
     });
@@ -132,12 +132,20 @@ export class EnrollmentComponent implements OnInit {
 
   loadTeachers() {
     const token = this.authtoken.getToken()
-    this.teacherService.getAllTeachersToken(token).subscribe((teachers) => {
-      this.teachers = teachers.docenteData;
-      this.filteredTeachers = teachers.docenteData;
-    });
+    if (this.authService.isAdmin()) {
+      this.teacherService.getAllTeachersToken(token).subscribe((data) => {
+        this.teachers = data.docenteData;
+        this.filteredTeachers = data.docenteData;
+      });
+    } else if (this.authService.isTeacher()) {
+      let clain = this.authtoken.decodePayloadJWT()
+      this.teacherService.getTeacherByIdToken(clain.id_docente, token).subscribe((data) => {
+        this.teachers = data.docenteData;
+        this.teachers = data.docenteData.filter(teacher => teacher.id == clain.id_docente);
+        this.filteredTeachers = this.teachers;
+      });
+    }
   }
-
   loadCourses() {
     const token = this.authtoken.getToken()
     this.coursesService.getCources(token).subscribe((courses) => {
@@ -168,7 +176,7 @@ export class EnrollmentComponent implements OnInit {
     const token = this.authtoken.getToken()
 
     const enrollmentData = this.enrollmentForm.value;
-  
+
 
     let body = {
       "nome": enrollmentData.name,
@@ -180,14 +188,14 @@ export class EnrollmentComponent implements OnInit {
     }
     if (this.viewMode === 'edit') {
       enrollmentData.id = this.enrollmentId;
-      this.enrollmentService.setEnrollment(enrollmentData.id,body,token).subscribe(() => {
+      this.enrollmentService.setEnrollment(enrollmentData.id, body, token).subscribe(() => {
         this.snackBar.open('Turma atualizada com sucesso!', 'Fechar', {
           duration: 3000,
         });
         this.enrollmentForm.disable();
       });
     } else {
-      this.enrollmentService.addEnrollment(body,token).subscribe((newEnrollment) => {
+      this.enrollmentService.addEnrollment(body, token).subscribe((newEnrollment) => {
         this.snackBar.open('Turma cadastrada com sucesso!', 'Fechar', {
           duration: 3000,
         });
@@ -215,7 +223,7 @@ export class EnrollmentComponent implements OnInit {
   onDelete() {
     if (!this.enrollmentId) return;
     const token = this.authtoken.getToken()
-    this.teacherService.getDeleteTeacherToken(this.enrollmentId,token).subscribe(() => {
+    this.teacherService.getDeleteTeacherToken(this.enrollmentId, token).subscribe(() => {
       this.snackBar.open('Turma excluída com sucesso!', 'Fechar', {
         duration: 3000,
       });
