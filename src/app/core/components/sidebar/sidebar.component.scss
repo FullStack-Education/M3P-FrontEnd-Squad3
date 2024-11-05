@@ -100,3 +100,15 @@ mat-divider {
     transition: margin-left 0.3s ease;
   }
 }
+@media (max-width: 480px) {
+  .sidebar-toggle-icon {
+    position: fixed;
+    top: -1rem;
+    right: 0.5rem;
+    z-index: 1100;
+  }
+  
+  .sidebar-toggle-icon mat-icon {
+    font-size: 2rem; 
+  }
+}
