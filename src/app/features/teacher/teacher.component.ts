@@ -84,38 +84,37 @@ export class TeacherComponent implements OnInit {
 
   initializeForm() {
     this.teacherForm = this.fb.group({
-      name: [
-        'leandro dias',
+      name: ['',
         [
           Validators.required,
           Validators.minLength(8),
           Validators.maxLength(64),
         ],
       ],
-      gender: ['M', Validators.required],
-      birthDate: ['04042024', [Validators.required, this.dateValidator]],
-      cpf: ['88888888888', [Validators.required, this.formValidationService.requireNumberLength(11), this.cpfValidator]],
-      rg: ['998398', [Validators.required, Validators.maxLength(20)]],
-      maritalStatus: ['S', Validators.required],
-      phone: ['48999999999', [Validators.required, this.formValidationService.requireNumberLength(11)]],
-      email: ['leandroDias@mail.com', [Validators.required, Validators.email]],
-      password: ['123456789', [Validators.required, Validators.minLength(8)]],
+      gender: ['', Validators.required],
+      birthDate: ['', [Validators.required, this.dateValidator]],
+      cpf: ['', [Validators.required, this.formValidationService.requireNumberLength(11), this.cpfValidator]],
+      rg: ['', [Validators.required, Validators.maxLength(20)]],
+      maritalStatus: ['', Validators.required],
+      phone: ['', [Validators.required, this.formValidationService.requireNumberLength(11)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       naturalness: [
-        'brasileiro',
+        '',
         [
           Validators.required,
           Validators.minLength(8),
           Validators.maxLength(64),
         ],
       ],
-      cep: ['88134000', [Validators.required, this.formValidationService.requireNumberLength(8)]],
-      street: [{ value: 'rua sei lah ', disabled: true }],
-      number: ['452'],
-      city: [{ value: 'palhoça', disabled: true }],
-      state: [{ value: 'SC', disabled: true }],
-      complement: ['casa'],
+      cep: ['', [Validators.required, this.formValidationService.requireNumberLength(8)]],
+      street: [{ value: ' ', disabled: true }],
+      number: [''],
+      city: [{ value: '', disabled: true }],
+      state: [{ value: '', disabled: true }],
+      complement: [''],
       idPapel: [''],
-      subjects: [[1, 2, 3], [Validators.required]],
+      subjects: [[], [Validators.required]],
     });
     let token = this.authToken.getToken()
     this.enrollmentService.getDisciplinesToken(token).subscribe((disciplines) => {
