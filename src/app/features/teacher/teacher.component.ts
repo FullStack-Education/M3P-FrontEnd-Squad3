@@ -158,29 +158,28 @@ export class TeacherComponent implements OnInit {
   cpfValidator(control: FormControl) {
     const cpf: string = control.value;
 
-    const numbers: number[] = cpf.split('')
+    // Extrai os números do CPF
+    const numbers: number[] = (cpf || '')
+      .split('')
       .map(char => Number.parseInt(char))
       .filter(number => !Number.isNaN(number));
 
-    const firstNums = numbers.slice(0, 9);
+    if (numbers.length !== 11) return { invalidCpf: true }; // CPF deve ter 11 dígitos
 
-    {
-      const sum = firstNums.reduce((accumulator, currVal, idx) => accumulator + currVal * (10 - idx), 0);
-      const firstControlDigit = 11 - (sum % 11);
-      if (firstControlDigit != numbers.at(-2))
-        return { invalidCpf: true };
+    // Função auxiliar para calcular o dígito de controle
+    const calculateControlDigit = (nums: number[], factor: number) => {
+      const sum = nums.reduce((acc, curr, idx) => acc + curr * (factor - idx), 0);
+      const controlDigit = 11 - (sum % 11);
+      return controlDigit >= 10 ? 0 : controlDigit;
+    };
 
-      firstNums.push(firstControlDigit);
-    }
+    // Verifica o primeiro dígito de controle
+    const firstControlDigit = calculateControlDigit(numbers.slice(0, 9), 10);
+    if (firstControlDigit !== numbers[9]) return { invalidCpf: true };
 
-    {
-      const sum = firstNums.reduce(
-        (accumulator, currVal, idx) => accumulator + currVal * (11 - idx), 0
-      );
-      const secondControlDigit = 11 - (sum % 11);
-      if (secondControlDigit != numbers.at(-1))
-        return { invalidCpf: true };
-    }
+    // Verifica o segundo dígito de controle
+    const secondControlDigit = calculateControlDigit(numbers.slice(0, 10), 11);
+    if (secondControlDigit !== numbers[10]) return { invalidCpf: true };
 
     return null;
   }
@@ -256,14 +255,24 @@ export class TeacherComponent implements OnInit {
         id_materias: teacherData.subjects
       }
       if (this.teacherId) {
-        this.teacherService.getUpdateTeachersToken(this.teacherId, body, token).subscribe((data) => {
-          let teacher = data.docenteData[0]
-          this.loadTeacherData(teacher.id)
+        this.teacherService.getUpdateTeachersToken(this.teacherId, body, token)
+          .subscribe({
+            next: (data) => {
+              let teacher = data.docenteData[0]
+              this.loadTeacherData(teacher.id)
 
-          this.snackBar.open('Docente atualizado com sucesso!', 'Fechar', {
-            duration: 3000,
+              this.snackBar.open('Docente atualizado com sucesso!', 'Fechar', {
+                duration: 3000,
+              });
+              this.cancelEdit();
+
+            },
+            error: (data) => {
+              this.snackBar.open(data.error.message, 'Fechar', {
+                duration: 3000,
+              });
+            }
           });
-        });
       }
     } else {
 
@@ -288,13 +297,20 @@ export class TeacherComponent implements OnInit {
         id_materias: teacherData.subjects
       }
 
-      this.teacherService.getCreateTeachersToken(body, token).subscribe(() => {
-        this.snackBar.open('Docente cadastrado com sucesso!', 'Fechar', {
-          duration: 3000,
-        });
+      this.teacherService.getCreateTeachersToken(body, token).subscribe({
+        next: () => {
+          this.snackBar.open('Docente cadastrado com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
+          this.cancelEdit();
+        },
+        error: (data) => {
+          this.snackBar.open(data.error.message, 'Fechar', {
+            duration: 3000,
+          });
+        }
       });
     }
-    this.cancelEdit();
   }
   configurarValidacaoSenha() {
     const passwordControl = this.teacherForm!.get('password');
