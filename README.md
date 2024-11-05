@@ -47,22 +47,32 @@ A aplicação é organizada em módulos, componentes e serviços, facilitando a 
    git clone https://github.com/FullStack-Education/M3P-FrontEnd-Squad3.git cd /M3P-FrontEnd-Squad3
    ```
 
-1. **Iniciar o Back-end:**
+2. **Iniciar o Back-end:**
   Se não iniciado, rodar a aplicação do back-end. 
   [Veja como](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
 
 1. **Instale as dependências:**
-  ```
-  npm install
-  ```
+    ```
+    npm install
+    ```
 
-1. **Inicie a aplicação:**
-  ```
-  npm run start:proxi
-  ```
+2. **Inicie a aplicação:**
+    ```
+    npm run start:proxi
+    ```
 
-1. **Acesse a aplicação no navegador:**
+3. **Acesse a aplicação no navegador:**
   http://localhost:4200
+
+### Dados Predefinidos
+
+Para facilitar os testes e utilização do sistema, a aplicação possui alguns dados predefinidos em seu banco de dados. Refira-se aos dados a seguir para acessar diferentes tipos de contas.
+
+- ADMIN
+  - Login: `ADM`
+  - Senha: `ADM`
+- PEDAGOGICO  
+  - ...
 
 ## Possíveis Melhorias
 
