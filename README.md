@@ -52,10 +52,14 @@ A aplicação é organizada em módulos, componentes e serviços, facilitando a 
   [Veja como](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
 
 1. **Instale as dependências:**
+  ```
   npm install
+  ```
 
 1. **Inicie a aplicação:**
+  ```
   npm run start:proxi
+  ```
 
 1. **Acesse a aplicação no navegador:**
   http://localhost:4200
