@@ -82,7 +82,7 @@
   
 
   <mat-sidenav-content [ngClass]="{'hidden-content': opened, 'closed-content': !opened}">
-    <mat-list-item (click)="sidenav.toggle()">
+    <mat-list-item class="sidebar-toggle-icon" (click)="sidenav.toggle()">
       <mat-icon >{{ opened ? 'arrow_back_ios' : 'menu' }}</mat-icon>
     </mat-list-item> 
     <ng-content></ng-content>
