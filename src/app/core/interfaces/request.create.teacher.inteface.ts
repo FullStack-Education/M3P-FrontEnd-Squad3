@@ -9,10 +9,10 @@ export interface IRequestCreateTeacher {
     RG: string,
     naturalidade: string,
     cep: string,
-    logadouro: string,
+    logradouro: string,
     numero: string,
     cidade: string,
-    estatdo: string,
+    estado: string,
     complemento: string
     senha:string,
     id_papel: number,

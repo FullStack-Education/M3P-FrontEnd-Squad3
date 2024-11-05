@@ -99,7 +99,7 @@ fdescribe('TeacherListComponent', () => {
       imports: [TeacherListComponent, MatTableModule, MatSnackBarModule, BrowserAnimationsModule], 
       providers: [
         provideRouter([
-          { path: 'teacher', component: TeacherListComponent }
+          { path: 'teacher-list', component: TeacherListComponent }
         ]), 
         { provide: TeacherService, useValue: teacherServiceSpy },
         { provide: AuthTokenService, useValue: authTokenServiceSpy },
