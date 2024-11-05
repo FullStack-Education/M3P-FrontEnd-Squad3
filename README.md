@@ -1,5 +1,7 @@
 # LabPCP - Gestão Educacional
 
+![Imagem da tela de login do sistema LabPCP](/public/assets/LABPCP.png)
+
 ## Descrição do Projeto
 
 Bem-vindo(a) ao repositório Front-End do projeto!
@@ -69,10 +71,29 @@ A aplicação é organizada em módulos, componentes e serviços, facilitando a 
 Para facilitar os testes e utilização do sistema, a aplicação possui alguns dados predefinidos em seu banco de dados. Refira-se aos dados a seguir para acessar diferentes tipos de contas.
 
 - ADMIN
-  - Login: `ADM`
-  - Senha: `ADM`
-- PEDAGOGICO  
-  - ...
+  - Login: `admin@mail.com`
+  - Senha: `admin@mail.com`
+- PROFESSOR  
+  - Login: `gabriel@mail.com`
+  - Senha: `123456`
+- ALUNO
+  - Login: `maria@mail.com`
+  - Senha: `123456`
+
+## Roteiro da Aplicação
+
+Possuir as seguintes páginas e funcionalidades:
+
+- Login
+- Menu Lateral
+- Toolbar
+- Início (Dashboard)
+- Cadastro/Edição de Docente
+- Cadastro/Edição de Alunos
+- Cadastro de Turmas
+- Cadastro de Notas
+- Listagem de Docentes
+- Listagem de Avaliações
 
 ## Possíveis Melhorias
 
