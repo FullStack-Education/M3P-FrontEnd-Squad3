@@ -1,8 +1,12 @@
-# Aang - Gestão Educacional
+# LabPCP - Gestão Educacional
+
+![Imagem da tela de login do sistema LabPCP](/public/assets/LABPCP.png)
 
 ## Descrição do Projeto
 
-O **Aang - Gestão Educacional** é uma aplicação web desenvolvida para facilitar a gestão educacional em instituições de ensino. O sistema oferece funcionalidades para gerenciar docentes, alunos, turmas e notas, proporcionando uma interface amigável e intuitiva para administradores e professores. 
+Bem-vindo(a) ao repositório Front-End do projeto!
+
+O **LabPCP - Gestão Educacional** é uma aplicação web desenvolvida para facilitar a gestão educacional em instituições de ensino. O sistema oferece funcionalidades para gerenciar docentes, alunos, turmas e notas, proporcionando uma interface amigável e intuitiva para administradores e professores.
 
 ### Problema que Resolve
 
@@ -11,8 +15,9 @@ A aplicação resolve o problema da complexidade na gestão de informações aca
 ## Tecnologias Utilizadas
 
 ### Backend
-- **JSON Server:** Utilizado como backend fake para simular operações CRUD (Create, Read, Update, Delete) e armazenar os dados do sistema.
-- **Node.js:** Ambiente de execução para o servidor backend e gerenciamento de pacotes com NPM.
+- **Java e Spring:** Execução de API externa feita em Java e Spring referente ao Back-end deste projeto.
+
+  [Veja e baixe aqui](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
 
 ### Frontend
 - **Angular 18:** Framework utilizado para construir a aplicação SPA (Single Page Application).
@@ -32,23 +37,74 @@ A aplicação é organizada em módulos, componentes e serviços, facilitando a 
 
 ### Pré-requisitos
 - **Node.js** instalado na máquina (versão 14 ou superior).
-- **Angular CLI** instalado globalmente: `npm install -g @angular/cli`
+- **Angular CLI** instalado globalmente: npm install -g @angular/cli
 - **Git** para clonar o repositório.
+- **Back-end** em execução juntamente à aplicação.  
+   [Veja aqui o Back-end](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
 
 ### Passos para Execução
 
-1. **Clone o repositório:**
-git clone https://github.com/seu-usuario/ts-angular-labPCP.git
-cd /ts-angular-labPCP
+1. **Clone o repositório:**  
+   ```
+   git clone https://github.com/FullStack-Education/M3P-FrontEnd-Squad3.git cd /M3P-FrontEnd-Squad3
+   ```
 
-2. **Instale as dependências:**
-  npm install
+2. **Iniciar o Back-end:**
+  Se não iniciado, rodar a aplicação do back-end. 
+  [Veja como](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
 
-3. **Inicie o JSON Server:**
-  npm run json-server
+1. **Instale as dependências:**
+    ```
+    npm install
+    ```
 
-4. **Inicie a aplicação Angular:**
-    ng serve
+2. **Inicie a aplicação:**
+    ```
+    npm run start:proxi
+    ```
 
-5. **Acesse a aplicação no navegador:**
+3. **Acesse a aplicação no navegador:**
   http://localhost:4200
+
+### Dados Predefinidos
+
+Para facilitar os testes e utilização do sistema, a aplicação possui alguns dados predefinidos em seu banco de dados. Refira-se aos dados a seguir para acessar diferentes tipos de contas.
+
+- ADMIN
+  - Login: `admin@mail.com`
+  - Senha: `admin@mail.com`
+- PROFESSOR  
+  - Login: `gabriel@mail.com`
+  - Senha: `123456`
+- ALUNO
+  - Login: `maria@mail.com`
+  - Senha: `123456`
+
+## Roteiro da Aplicação
+
+Possuir as seguintes páginas e funcionalidades:
+
+- Login
+- Menu Lateral
+- Toolbar
+- Início (Dashboard)
+- Cadastro/Edição de Docente
+- Cadastro/Edição de Alunos
+- Cadastro de Turmas
+- Cadastro de Notas
+- Listagem de Docentes
+- Listagem de Avaliações
+
+## Possíveis Melhorias
+
+- ### Dashboard com Visualizações  
+  Incluir gráficos e visualizações com dados agregados, como número de alunos por turma, desempenho médio por disciplina, etc., utilizando bibliotecas como D3.js ou Chart.js.
+
+- ### Pesquisa e Filtro Avançados
+  Implementar filtros e uma barra de pesquisa global para facilitar a navegação pelos registros de alunos, docentes e turmas, melhorando a acessibilidade e a experiência do usuário.
+
+- ### Tema Personalizável
+  Incluir a opção de temas claro e escuro, além de uma seção de configurações onde o usuário possa personalizar a aparência da interface.
+
+- ### Suporte Multilíngue
+  Adicionar suporte para múltiplos idiomas, permitindo que o sistema seja usado em diferentes regiões.
