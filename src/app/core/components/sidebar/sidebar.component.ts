@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { IUser } from '../../interfaces/user.interface';
 import { IToken } from '../../interfaces/Itoken.inteface';
+import { LoaderService } from '../../services/loader.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ import { IToken } from '../../interfaces/Itoken.inteface';
   styleUrl: './sidebar.component.scss',
 })
 export class AppSidebarComponent implements OnInit {
+  loader = inject(LoaderService);
   @ViewChild('sidenav') sidenav!: MatSidenav;
   events: string[] = [];
   opened: boolean = false;
@@ -43,7 +45,12 @@ export class AppSidebarComponent implements OnInit {
     this.opened = !this.opened;
   }
 
+  route(routerLink: string){
+    this.loader.showLoading(700)
+    this.router.navigate([routerLink]);
+  }
   logout() {
+    this.loader.showLoading()
     this.authService.logOut();
     this.router.navigate(['/login']);
   }
