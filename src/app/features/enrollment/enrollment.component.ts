@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -33,6 +33,7 @@ import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
 import { TeacherService } from '../../core/services/teacher.service';
 import { ITeacher } from '../../core/interfaces/teacher.interface';
 import moment from 'moment';
+import { LoaderService } from '../../core/services/loader.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -55,6 +56,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
   ],
 })
 export class EnrollmentComponent implements OnInit {
+  loader = inject(LoaderService);
   enrollmentForm!: FormGroup;
   teachers = [] as ITeacher[];
   courses: ICursoAluno[] = [];
@@ -189,17 +191,21 @@ export class EnrollmentComponent implements OnInit {
     if (this.viewMode === 'edit') {
       enrollmentData.id = this.enrollmentId;
       this.enrollmentService.setEnrollment(enrollmentData.id, body, token).subscribe(() => {
+        this.loader.showLoading(700)
         this.snackBar.open('Turma atualizada com sucesso!', 'Fechar', {
-          duration: 3000,
+          duration: 1500,
         });
         this.enrollmentForm.disable();
       });
     } else {
       this.enrollmentService.addEnrollment(body, token).subscribe((newEnrollment) => {
+        this.loader.showLoading(700)
         this.snackBar.open('Turma cadastrada com sucesso!', 'Fechar', {
           duration: 3000,
         });
         this.enrollmentId = newEnrollment.turmaData[0].id;
+        this.viewMode = 'read';
+        this.loadEnrollmentData(this.enrollmentId);
         this.enrollmentForm.disable();
       });
     }
@@ -223,11 +229,19 @@ export class EnrollmentComponent implements OnInit {
   onDelete() {
     if (!this.enrollmentId) return;
     const token = this.authtoken.getToken()
-    this.teacherService.getDeleteTeacherToken(this.enrollmentId, token).subscribe(() => {
-      this.snackBar.open('Turma excluída com sucesso!', 'Fechar', {
-        duration: 3000,
-      });
-      this.enrollmentForm.reset();
+    this.teacherService.getDeleteTeacherToken(this.enrollmentId, token).subscribe({
+      next: () => {
+        this.loader.showLoading(700)
+        this.snackBar.open('Turma excluída com sucesso!', 'Fechar', {
+          duration: 3000,
+        });
+        this.enrollmentForm.reset();
+      },
+      error: (data) => {
+        this.snackBar.open(data.error.message, 'Fechar', {
+          duration: 3000,
+        });
+      }
     });
   }
 
