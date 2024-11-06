@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +27,7 @@ import { PhonePipe } from '../../core/pipes/phone.pipe';
 import { INota } from '../../core/interfaces/nota.inteface';
 import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
 import { DateFormatPipe } from '../../core/pipes/date-format.pipe';
+import { LoaderService } from '../../core/services/loader.service';
 
 @Component({
   selector: 'app-home',
@@ -50,6 +51,7 @@ import { DateFormatPipe } from '../../core/pipes/date-format.pipe';
   ],
 })
 export class HomeComponent {
+  loader = inject(LoaderService);
   studentSearchTerm: string = '';
   currentUser: IToken | null = null;
   statistics = [] as { title: string; detail: number }[];
@@ -135,6 +137,7 @@ export class HomeComponent {
   }
 
   logout() {
+    this.loader.showLoading()
     this.authService.logOut();
     this.router.navigate(['/login']);
   }
@@ -186,6 +189,18 @@ export class HomeComponent {
   }
 
   onViewGradeDetails(gradeId: string) {
+    this.loader.showLoading(700)
     this.router.navigate(['/grade-list']);
   }
+
+  route(url: string, studentId: number) {
+    this.loader.showLoading(700)
+    this.router.navigate([url], { queryParams: { studentId: studentId } });
+  }
+
+  routeStudente(url: string, studentId: number) {
+    this.loader.showLoading(700)
+    this.router.navigate([url], { queryParams: { id: studentId } });
+  }
+  
 }
