@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,6 +22,7 @@ import { TeacherService } from '../../core/services/teacher.service';
 import AuthTokenService from '../../core/services/auth-token.service';
 import { IMateria } from '../../core/interfaces/response.materias.inteface';
 import moment from 'moment';
+import { LoaderService } from '../../core/services/loader.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -45,6 +46,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
   ],
 })
 export class TeacherComponent implements OnInit {
+  loader = inject(LoaderService);
   teacherForm!: FormGroup;
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
@@ -261,8 +263,9 @@ export class TeacherComponent implements OnInit {
               this.loadTeacherData(teacher.id)
 
               this.snackBar.open('Docente atualizado com sucesso!', 'Fechar', {
-                duration: 3000,
+                duration: 1500,
               });
+              this.loader.showLoading(700)
               this.cancelEdit();
 
             },
@@ -299,8 +302,11 @@ export class TeacherComponent implements OnInit {
       this.teacherService.getCreateTeachersToken(body, token).subscribe({
         next: () => {
           this.snackBar.open('Docente cadastrado com sucesso!', 'Fechar', {
-            duration: 3000,
-          });
+            duration: 1500,
+          })
+          this.loader.showLoading(700)
+          
+          
           this.cancelEdit();
         },
         error: (data) => {
@@ -329,6 +335,7 @@ export class TeacherComponent implements OnInit {
   }
   enableEdit() {
     // Logic to switch to edit mode
+    this.loader.showLoading(700)
     this.viewMode = 'edit';
     this.teacherForm.enable();
     this.configurarValidacaoSenha()
@@ -350,7 +357,9 @@ export class TeacherComponent implements OnInit {
     this.teacherService.getDeleteTeacherToken(this.teacherId, token).subscribe(() => {
       this.snackBar.open('Docente excluído com sucesso!', 'Fechar', {
         duration: 3000,
-      });
+      }).afterDismissed().subscribe(() =>{
+    });
+    this.loader.showLoading(700)
       this.teacherForm.reset();
     });
   }
