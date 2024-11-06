@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { RouterModule } from '@angular/router';
 import { IUser } from '../../interfaces/user.interface';
+import { IToken } from '../../interfaces/Itoken.inteface';
+import { LoaderService } from '../../services/loader.service';
 
 
 @Component({
@@ -27,10 +29,11 @@ import { IUser } from '../../interfaces/user.interface';
   styleUrl: './sidebar.component.scss',
 })
 export class AppSidebarComponent implements OnInit {
+  loader = inject(LoaderService);
   @ViewChild('sidenav') sidenav!: MatSidenav;
   events: string[] = [];
-  opened: boolean = true;
-  user: IUser | null = null;
+  opened: boolean = false;
+  user: IToken | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -42,23 +45,28 @@ export class AppSidebarComponent implements OnInit {
     this.opened = !this.opened;
   }
 
+  route(routerLink: string){
+    this.loader.showLoading(700)
+    this.router.navigate([routerLink]);
+  }
   logout() {
+    this.loader.showLoading()
     this.authService.logOut();
     this.router.navigate(['/login']);
   }
 
   get isAdmin(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.role?.name === 'Admin';
+    return user?.scope === 'ADM';
   }
 
   get isDocente(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.role?.name === 'Docente';
+    return user?.scope === "PEDAGOGICO" || user?.scope === "PROFESSOR";
   }
 
   get isAluno(): boolean {
     const user = this.authService.getCurrentUser();
-    return user?.role?.name === 'Aluno';
+    return user?.scope === 'ALUNO';
   }
 }

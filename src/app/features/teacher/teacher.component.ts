@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,6 +16,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
+import { FormValidationService } from '../../core/services/form-validation.service';
+import { NgxMaskDirective } from 'ngx-mask';
+import { TeacherService } from '../../core/services/teacher.service';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { IMateria } from '../../core/interfaces/response.materias.inteface';
+import moment from 'moment';
+import { LoaderService } from '../../core/services/loader.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -34,26 +41,31 @@ type typeViewMode = 'read' | 'insert' | 'edit';
     MatFormFieldModule,
     MatOptionModule,
     MatIconModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    NgxMaskDirective
   ],
 })
 export class TeacherComponent implements OnInit {
+  loader = inject(LoaderService);
   teacherForm!: FormGroup;
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
-  subjects = [] as IDisciplines[];
+  subjects = [] as IMateria[];
   viewMode: typeViewMode = 'read';
-  teacherId: string | null = null;
+  teacherId: number | null = null;
   isEditMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
     private viaCepService: ViaCepService,
     private enrollmentService: EnrollmentService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private teacherService: TeacherService,
+    private authToken: AuthTokenService
+  ) { }
 
   ngOnInit() {
     const paramTeacherId = this.route.snapshot.queryParamMap.get('id');
@@ -62,7 +74,7 @@ export class TeacherComponent implements OnInit {
       this.viewMode = 'insert';
       this.teacherForm.enable();
     } else {
-      this.teacherId = paramTeacherId;
+      this.teacherId = parseInt(paramTeacherId);
       this.loadTeacherData(this.teacherId);
       const viewModeParam =
         this.route.snapshot.queryParamMap.get('mode') || 'read';
@@ -74,8 +86,7 @@ export class TeacherComponent implements OnInit {
 
   initializeForm() {
     this.teacherForm = this.fb.group({
-      name: [
-        '',
+      name: ['',
         [
           Validators.required,
           Validators.minLength(8),
@@ -84,10 +95,10 @@ export class TeacherComponent implements OnInit {
       ],
       gender: ['', Validators.required],
       birthDate: ['', [Validators.required, this.dateValidator]],
-      cpf: ['', [Validators.required, this.cpfValidator]],
+      cpf: ['', [Validators.required, this.formValidationService.requireNumberLength(11), this.cpfValidator]],
       rg: ['', [Validators.required, Validators.maxLength(20)]],
       maritalStatus: ['', Validators.required],
-      phone: ['', [Validators.required, this.phoneValidator]],
+      phone: ['', [Validators.required, this.formValidationService.requireNumberLength(11)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       naturalness: [
@@ -98,47 +109,112 @@ export class TeacherComponent implements OnInit {
           Validators.maxLength(64),
         ],
       ],
-      cep: ['', [Validators.required, Validators.minLength(8)]],
-      street: [{ value: '', disabled: true }],
+      cep: ['', [Validators.required, this.formValidationService.requireNumberLength(8)]],
+      street: [{ value: ' ', disabled: true }],
       number: [''],
       city: [{ value: '', disabled: true }],
       state: [{ value: '', disabled: true }],
       complement: [''],
+      idPapel: [''],
       subjects: [[], [Validators.required]],
     });
-    this.enrollmentService.getDisciplines().subscribe((disciplines) => {
-      this.subjects = disciplines;
+    let token = this.authToken.getToken()
+    this.enrollmentService.getDisciplinesToken(token).subscribe((disciplines) => {
+      this.subjects = disciplines.materiaData;
     });
+
+    console.log(this.teacherForm);
+    this.teacherForm.get('street')?.disable();
   }
 
-  loadTeacherData(teacherId: string) {
-    this.userService.getUserById(teacherId).subscribe((teacher) => {
-      this.teacherForm.patchValue(teacher);
+  loadTeacherData(teacherId: number) {
+    let token = this.authToken.getToken()
+    this.teacherService.getTeacherToken(teacherId, token).subscribe((data) => {
+      let teacher = data.docenteData[0]
+
+      console.log(teacher)
+      this.teacherForm.patchValue({
+        name: teacher.nome,
+        phone: teacher.telefone,
+        gender: teacher.genero,
+        maritalStatus: teacher.estadoCivil,
+        birthDate: moment(teacher.dataNascimento, 'YYYY-MM-DD').format('DDMMYYYY'),
+        email: teacher.email,
+        cpf: teacher.cpf,
+        rg: teacher.rg,
+        naturalness: teacher.naturalidade,
+        cep: teacher.cep,
+        street: teacher.logradouro,
+        number: teacher.numero,
+        city: teacher.cidade,
+        complement: teacher.complemento,
+        iduser: teacher.usuario.id,
+        subjects: teacher.materias.map((materia: IMateria) => materia.id),
+        state: teacher.estado,
+        password: ''
+      });
     });
   }
 
   cpfValidator(control: FormControl) {
- /*    const cpf = control.value;
-    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-    if (!cpfRegex.test(cpf)) {
-      return { invalidCpf: true };
-    }
-    return null; */
+    const cpf: string = control.value;
+
+    // Extrai os números do CPF
+    const numbers: number[] = (cpf || '')
+      .split('')
+      .map(char => Number.parseInt(char))
+      .filter(number => !Number.isNaN(number));
+
+    if (numbers.length !== 11) return { invalidCpf: true }; // CPF deve ter 11 dígitos
+
+    // Função auxiliar para calcular o dígito de controle
+    const calculateControlDigit = (nums: number[], factor: number) => {
+      const sum = nums.reduce((acc, curr, idx) => acc + curr * (factor - idx), 0);
+      const controlDigit = 11 - (sum % 11);
+      return controlDigit >= 10 ? 0 : controlDigit;
+    };
+
+    // Verifica o primeiro dígito de controle
+    const firstControlDigit = calculateControlDigit(numbers.slice(0, 9), 10);
+    if (firstControlDigit !== numbers[9]) return { invalidCpf: true };
+
+    // Verifica o segundo dígito de controle
+    const secondControlDigit = calculateControlDigit(numbers.slice(0, 10), 11);
+    if (secondControlDigit !== numbers[10]) return { invalidCpf: true };
+
+    return null;
   }
+
   dateValidator(control: FormControl) {
-  /*   const date = control.value;
-    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-    if (!dateRegex.test(date)) {
-      return { invalidDate: true };
-    }
-    return null; */
+    const value: string = control.value;
+    if (!value) return null;
+
+    // Transform the format dd/MM/yyyy (input's default) to MM/dd/yyyy
+    const timestamp = Date.parse(`${value.substring(2, 4)}/${value.substring(0, 2)}/${value.substring(4)}`);
+    if (isNaN(timestamp)) return { invalidFormat: true };
+
+    const diffTime = (Date.now() - timestamp) / 1000;
+    const ageInSeconds = 140 * 365 * 24 * 60 * 60;
+
+    // Check if the date is beyond a reasonable range (140 years old) or in the future
+    return diffTime > ageInSeconds || diffTime < 0 ? { invalidDate: true } : null;
   }
-  phoneValidator(control: FormControl) {}
 
   onCepBlur() {
-    const cep = this.teacherForm.get('cep')?.value;
-    this.viaCepService.getAddressByCep(cep).subscribe((address) => {
+    const cepInput = this.teacherForm.get('cep');
+    if (!cepInput || cepInput.invalid) {
+      return;
+    }
+    this.viaCepService.getAddressByCep(cepInput.value).subscribe((address) => {
       console.log('address', address);
+
+      if ('erro' in address) {
+        cepInput?.setErrors({ invalid: true });
+        this.snackBar.open('CEP informado não existe!', 'Fechar', {
+          duration: 3000,
+        });
+        return;
+      }
 
       this.teacherForm.patchValue({
         city: address.localidade,
@@ -155,30 +231,114 @@ export class TeacherComponent implements OnInit {
       alert('Existem campos inválidos, revise e tente novamente');
       return;
     }
-
+    let token = this.authToken.getToken()
     const teacherData = this.teacherForm.value;
     teacherData.papelId = 2; // Docente
     if (this.viewMode === 'edit') {
       teacherData.id = this.teacherId;
-      this.userService.setUser(teacherData).subscribe(() => {
-        this.snackBar.open('Docente atualizado com sucesso!', 'Fechar', {
-          duration: 3000,
-        });
-      });
+      let body = {
+        nome: teacherData.name,
+        telefone: teacherData.phone,
+        genero: teacherData.gender,
+        estadoCivil: teacherData.maritalStatus,
+        dataNascimento: moment(teacherData.birthDate, 'DDMMYYYY').format("YYYY-MM-DD"),
+        email: teacherData.email,
+        CPF: teacherData.cpf,
+        RG: teacherData.rg,
+        naturalidade: teacherData.naturalness,
+        cep: teacherData.cep,
+        logradouro: teacherData.street,
+        numero: teacherData.number,
+        cidade: teacherData.city,
+        estado: teacherData.state,
+        complemento: teacherData.complement,
+        id_papel: parseInt(teacherData.papelId),
+        id_materias: teacherData.subjects
+      }
+      if (this.teacherId) {
+        this.teacherService.getUpdateTeachersToken(this.teacherId, body, token)
+          .subscribe({
+            next: (data) => {
+              let teacher = data.docenteData[0]
+              this.loadTeacherData(teacher.id)
+
+              this.snackBar.open('Docente atualizado com sucesso!', 'Fechar', {
+                duration: 1500,
+              });
+              this.loader.showLoading(700)
+              this.cancelEdit();
+
+            },
+            error: (data) => {
+              this.snackBar.open(data.error.message, 'Fechar', {
+                duration: 3000,
+              });
+            }
+          });
+      }
     } else {
-      this.userService.addUser(teacherData).subscribe(() => {
-        this.snackBar.open('Docente cadastrado com sucesso!', 'Fechar', {
-          duration: 3000,
-        });
+
+      let body = {
+        nome: teacherData.name,
+        telefone: teacherData.phone,
+        genero: teacherData.gender,
+        estadoCivil: teacherData.maritalStatus,
+        dataNascimento: moment(teacherData.birthDate, 'DDMMYYYY').format("YYYY-MM-DD"),
+        email: teacherData.email,
+        CPF: teacherData.cpf,
+        RG: teacherData.rg,
+        naturalidade: teacherData.naturalness,
+        cep: teacherData.cep,
+        logradouro: teacherData.street,
+        numero: teacherData.number,
+        cidade: teacherData.city,
+        estado: teacherData.state,
+        complemento: teacherData.complement,
+        senha: teacherData.password,
+        id_papel: parseInt(teacherData.papelId),
+        id_materias: teacherData.subjects
+      }
+
+      this.teacherService.getCreateTeachersToken(body, token).subscribe({
+        next: () => {
+          this.snackBar.open('Docente cadastrado com sucesso!', 'Fechar', {
+            duration: 1500,
+          })
+          this.loader.showLoading(700)
+          
+          
+          this.cancelEdit();
+        },
+        error: (data) => {
+          this.snackBar.open(data.error.message, 'Fechar', {
+            duration: 3000,
+          });
+        }
       });
     }
-     this.cancelEdit();
   }
+  configurarValidacaoSenha() {
+    const passwordControl = this.teacherForm!.get('password');
+    if (passwordControl) {
+      if (this.viewMode === 'edit') {
 
+        passwordControl.clearValidators();
+      } else {
+        passwordControl.setValidators([Validators.required, Validators.minLength(8)]);
+        // Remove todas as validações do controle
+
+      }
+
+      // Atualiza o estado do controle
+      passwordControl.updateValueAndValidity();
+    }
+  }
   enableEdit() {
     // Logic to switch to edit mode
+    this.loader.showLoading(700)
     this.viewMode = 'edit';
     this.teacherForm.enable();
+    this.configurarValidacaoSenha()
   }
 
   cancelEdit() {
@@ -193,11 +353,22 @@ export class TeacherComponent implements OnInit {
 
   onDelete() {
     if (!this.teacherId) return;
-    this.userService.deleteUser(this.teacherId).subscribe(() => {
+    let token = this.authToken.getToken();
+    this.teacherService.getDeleteTeacherToken(this.teacherId, token).subscribe(() => {
       this.snackBar.open('Docente excluído com sucesso!', 'Fechar', {
         duration: 3000,
-      });
+      }).afterDismissed().subscribe(() =>{
+    });
+    this.loader.showLoading(700)
       this.teacherForm.reset();
     });
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.teacherForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.teacherForm, inputName);
   }
 }

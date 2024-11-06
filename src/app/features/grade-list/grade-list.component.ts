@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,11 @@ import { GradeService } from '../../core/services/grade.service';
 import { AuthService } from '../../core/services/auth.service';
 import { StudentService, IStudentGrade } from '../../core/services/student.service';
 import { MatTableModule } from '@angular/material/table';
+import { IToken } from '../../core/interfaces/Itoken.inteface';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { IResponseNotaAluno } from '../../core/interfaces/response.nota.aluno.inteface';
+import { INota } from '../../core/interfaces/nota.inteface';
+import { LoaderService } from '../../core/services/loader.service';
 
 @Component({
   selector: 'app-grade-list',
@@ -30,25 +35,39 @@ import { MatTableModule } from '@angular/material/table';
   styleUrl: './grade-list.component.scss',
 })
 export class GradeListComponent implements OnInit {
+  loader = inject(LoaderService);
   grades: IStudentGrade[] = [];
   filteredGrades: IStudentGrade[] = [];
   searchQuery: string = '';
-  student?: IUser;
+  student?: IToken;
   displayedColumns: string[] = ['materiaName', 'name', 'grade', 'date'];
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
     private gradeService: GradeService,
+    private authTokenService: AuthTokenService,
     private studentService: StudentService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.student = this.authService.getCurrentUser();
+    const token: string = this.authTokenService.getToken();
     this.studentService
-      .getGrades(this.student.id)
-      .subscribe((data: IStudentGrade[]) => {
+      .getNotasAlunoToken(this.student.id_aluno, token)
+      .subscribe((response: IResponseNotaAluno) => {      
+        
+        const data: IStudentGrade[] = response.notaData.map((nota: INota) => ({
+          id: nota.id,
+          name: nota.nome,
+          grade: nota.valor.toString(),
+          date: new Date(nota.data),
+          materiaName: nota.materia.nome,
+          professorId: '',
+          materiaId: nota.materia.id,
+          usuarioId: this.student!.id_usuario,
+        }));
         this.grades = data;
         this.filteredGrades = data;
       });

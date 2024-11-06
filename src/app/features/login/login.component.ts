@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -15,6 +15,10 @@ import { AuthService} from '../../core/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { IUser } from '../../core/interfaces/user.interface';
+import { FormValidationService } from '../../core/services/form-validation.service';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { IToken } from '../../core/interfaces/Itoken.inteface';
+import { LoaderService } from '../../core/services/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -24,21 +28,22 @@ import { IUser } from '../../core/interfaces/user.interface';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  username: string = '';
+  loader = inject(LoaderService);
+  email: string = '';
   password: string = '';
   loginForm: FormGroup;
   formFields = [
     {
-      id: 'username_div',
-      name: 'username',
+      id: 'email_div',
+      name: 'email',
       label: 'Email',
-      type: 'text',
-      model: this.username,
+      type: 'email',
+      model: this.email,
       errors: [
         { type: 'required', message: 'Email é um campo obrigatório.' },
         {
-          type: 'minlength',
-          message: 'Email deve conter ao menos 3 caracteres.',
+          type: 'email',
+          message: 'Por favor insira um email válido.',
         },
       ],
     },
@@ -75,26 +80,29 @@ export class LoginComponent {
     private fb: FormBuilder,
     private dialog: Dialog,
     private authService: AuthService,
+    private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private authToken: AuthTokenService,
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   signIn() {
-    const { username, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
     this.authService
-      .signIn(username, password)
-      .subscribe((user: IUser | null) => {
+      .signIn(email, password)
+      .subscribe((user: IToken | null) => {
         if (user) {
           this.snackBar.open(
-            `Bem vinda, ${user.name}! Papel: ${user.role?.name}`,
+            `Bem vinda, ${user.name}! Papel: ${user.scope}`,
             'Close',
-            { duration: 3000 }
+            { duration: 1000 }
           ).afterDismissed().subscribe(() => {
+            this.loader.showLoading(700)
             this.router.navigate(['/home']);
           });
         } else {
@@ -110,10 +118,6 @@ export class LoginComponent {
   isInvalid(fieldName: string): boolean | undefined {
     const field = this.loginForm.get(fieldName);
     return field?.invalid && field.touched;
-  }
-
-  hasError(fieldName: string, errorType: string): boolean {
-    return this.loginForm.get(fieldName)?.hasError(errorType) || false;
   }
 
   forgotPassword() {
@@ -134,5 +138,13 @@ export class LoginComponent {
         actions: [{ label: 'OK', action: 'close', visible: true }],
       },
     });
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.loginForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.loginForm, inputName);
   }
 }

@@ -1,42 +1,41 @@
 <section id="student-grades" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Minhas Avaliações</h3>
+    <h2>Minhas Avaliações</h2>
   </mat-toolbar>
   <div class="card-container">
-    <mat-card *ngFor="let grade of studentGrades" class="student-card" (click)="onViewGradeDetails(grade.id)">
+    <mat-card *ngFor="let grade of studentGrades.slice(0, 3)" class="student-card" (click)="onViewGradeDetails(grade.id)">
       <mat-card-header>
-        <mat-card-title>{{ grade.materiaName }}</mat-card-title>
-        <mat-card-subtitle> <p>Nota: {{ grade.grade }}</p></mat-card-subtitle>
+        <mat-card-title> {{ grade.nome }}</mat-card-title>
+        <mat-card-subtitle> <p>nota: {{ grade.valor }}</p></mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        data: {{ grade.date || null }}
+        data: {{ grade.data | dateFormatPipe  }}
       </mat-card-content>
     </mat-card>
   </div>
 </section>
 
-<section id="minhas-materias" *ngIf="isCurrentUserStudent()">
+<section id="student-grades" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Minhas Turmas / Matérias</h3>
+    <h2>Meu Curso</h2>
   </mat-toolbar>
   <div class="card-container">
-    <mat-card *ngFor="let enrollment of studentEnrollments" class="student-card">
+    <mat-card class="student-card">
       <mat-card-header>
-        <mat-card-title>Turma</mat-card-title>
+        <mat-card-title>{{ studentYourCourse?.nome}}</mat-card-title>
       </mat-card-header>
-      <mat-card-content>{{ enrollment.name }}</mat-card-content>
     </mat-card>
   </div>
 </section>
 
 <section id="disciplinas-extras" *ngIf="isCurrentUserStudent()">
   <mat-toolbar class="mat-toolbar">
-    <h3>Disciplinas Extras</h3>
+    <h2>Cursos Extras Disponíveis</h2>
   </mat-toolbar>
   <div class="card-container">
-    <mat-card *ngFor="let extraSubject of extraSubjects" class="student-card">
+    <mat-card *ngFor="let course of studentExtraCourses" class="student-card">
       <mat-card-header>
-        <mat-card-title>{{ extraSubject }}</mat-card-title>
+        <mat-card-title>{{ course.nome }}</mat-card-title>
       </mat-card-header>
     </mat-card>
   </div>
@@ -44,7 +43,7 @@
 
 <section id="statistics" *ngIf="isCurrentUserAdmin()" >
   <mat-toolbar id="welcome-toolbar" class="mat-toolbar">
-    <h3>Estatisticas</h3>
+    <h2>Estatisticas</h2>
   </mat-toolbar>
 
   <div class="card-container">
@@ -61,11 +60,11 @@
 
 <section id="student-listing" *ngIf="isCurrentUserAdmin() || isCurrentUserTeacher()">
   <mat-toolbar class="mat-toolbar">
-    <mat-form-field appearance="fill">
+    <mat-form-field >
       <mat-label>Pesquisar aluno:</mat-label>
       <input
         matInput
-        type="text"
+        type="search"
         [(ngModel)]="studentSearchTerm"
         placeholder="Buscar..."
         (ngModelChange)="onSearch()"
@@ -83,14 +82,14 @@
     <mat-card *ngFor="let student of students" class="student-card">
       <img
         mat-card-image
-        src="{{ student.image || 'assets/avatar.png' }}"
-        alt="Photo of {{ student.name }}"
+        src="assets/avatar.png"
+        alt="Photo of {{ student.nome }}"
       />
       <mat-card-header>
-        <mat-card-title>{{ student.name }}</mat-card-title>
+        <mat-card-title>{{ student.nome }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        {{ student.age }} anos
+        {{ student.dataNascimento | idadePipe }} anos
         <span
           ><mat-icon
             mat-icon-button
@@ -98,13 +97,12 @@
             aria-label="phone"
             fontIcon="phone"
           ></mat-icon>
-          {{ student.phone }}</span
+          {{ student.telefone | PhonePipe}}</span
         >
         <button *ngIf="isCurrentUserAdmin()" 
           mat-stroked-button 
           aria-label="Ver mais" 
-          [routerLink]="['/student']"
-          [queryParams] = "{ id: student.id }">
+          (click)="routeStudente('/student',student.id)" >
           ver mais
         </button>
 
@@ -112,6 +110,7 @@
           *ngIf="isCurrentUserTeacher()" 
           mat-stroked-button 
           aria-label="Ver mais" 
+          (click)="route('/grade',student.id)"
           [routerLink]="['/grade']"
           [queryParams] = "{ studentId : student.id}" >
           lançar nota

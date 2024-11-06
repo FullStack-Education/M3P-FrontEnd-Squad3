@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -25,6 +25,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { IUser } from '../../core/interfaces/user.interface';
+import { FormValidationService } from '../../core/services/form-validation.service';
+import { ICourse } from '../../core/interfaces/course.interface';
+import AuthTokenService from '../../core/services/auth-token.service';
+import { coursesService } from '../../core/services/courses.service';
+import { ICursoAluno } from '../../core/interfaces/curso.aluno.inteface';
+import { TeacherService } from '../../core/services/teacher.service';
+import { ITeacher } from '../../core/interfaces/teacher.interface';
+import moment from 'moment';
+import { LoaderService } from '../../core/services/loader.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -47,20 +56,28 @@ type typeViewMode = 'read' | 'insert' | 'edit';
   ],
 })
 export class EnrollmentComponent implements OnInit {
+  loader = inject(LoaderService);
   enrollmentForm!: FormGroup;
-  teachers = [] as IUser[];
+  teachers = [] as ITeacher[];
+  courses: ICursoAluno[] = [];
+  filteredTeachers: ITeacher[] = [];
+  filteredCourses: ICursoAluno[] = [];
   viewMode: typeViewMode = 'read';
-  enrollmentId: string | null = null;
+  enrollmentId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
+    private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
     private enrollmentService: EnrollmentService,
     private route: ActivatedRoute,
-    private router : Router,
-    private authService: AuthService
-  ) {}
+    private router: Router,
+    private authService: AuthService,
+    private authtoken: AuthTokenService,
+    private coursesService: coursesService,
+    private teacherService: TeacherService,
+  ) { }
 
   ngOnInit() {
     const paramEnrollmentId = this.route.snapshot.queryParamMap.get('id');
@@ -69,7 +86,7 @@ export class EnrollmentComponent implements OnInit {
       this.viewMode = 'insert';
       this.enrollmentForm.enable();
     } else {
-      this.enrollmentId = paramEnrollmentId;
+      this.enrollmentId = parseInt(paramEnrollmentId);
       this.loadEnrollmentData(this.enrollmentId);
       const viewModeParam =
         this.route.snapshot.queryParamMap.get('mode') || 'read';
@@ -77,6 +94,8 @@ export class EnrollmentComponent implements OnInit {
       if (this.viewMode === 'read') this.enrollmentForm.disable();
       else this.enrollmentForm.enable();
     }
+    this.loadTeachers();
+    this.loadCourses();
   }
 
   initializeForm() {
@@ -89,11 +108,8 @@ export class EnrollmentComponent implements OnInit {
           Validators.maxLength(64),
         ],
       ],
-      dateStart: ['', Validators.required],
-      dateEnd: [
-        '',
-        [Validators.required],
-      ],
+      dateStart: ['', [Validators.required, this.dateValidator]],
+      dateEnd: ['', [Validators.required, this.dateValidator]],
       timeStart: [
         '',
         [
@@ -101,17 +117,56 @@ export class EnrollmentComponent implements OnInit {
           Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/),
         ],
       ],
-      teacher: [{value: '', disabled: this.isCurrentUserTeacher() }, Validators.required],
+      teacher: [{ value: '', disabled: this.isCurrentUserTeacher() }, Validators.required],
+      course: ['', Validators.required],
     });
-    this.userService.getAllTeachers().subscribe((teachers) => {
-      this.teachers = teachers;
+    const token = this.authtoken.getToken()
+    this.teacherService.getAllTeachersToken(token).subscribe((teachers) => {
+      this.teachers = teachers.docenteData;
     });
   }
 
-  loadEnrollmentData(enrollmentId: string) {    
-    this.enrollmentService.getEnrollmentById(enrollmentId).subscribe((enrollment) => {
+  loadEnrollmentData(enrollmentId: string | number) {
+    this.enrollmentService.getEnrollmentById(enrollmentId.toString()).subscribe((enrollment) => {
       this.enrollmentForm.patchValue(enrollment);
     });
+  }
+
+  loadTeachers() {
+    const token = this.authtoken.getToken()
+    if (this.authService.isAdmin()) {
+      this.teacherService.getAllTeachersToken(token).subscribe((data) => {
+        this.teachers = data.docenteData;
+        this.filteredTeachers = data.docenteData;
+      });
+    } else if (this.authService.isTeacher()) {
+      let clain = this.authtoken.decodePayloadJWT()
+      this.teacherService.getTeacherByIdToken(clain.id_docente, token).subscribe((data) => {
+        this.teachers = data.docenteData;
+        this.teachers = data.docenteData.filter(teacher => teacher.id == clain.id_docente);
+        this.filteredTeachers = this.teachers;
+      });
+    }
+  }
+  loadCourses() {
+    const token = this.authtoken.getToken()
+    this.coursesService.getCources(token).subscribe((courses) => {
+      this.courses = courses.cursoData;
+      this.filteredCourses = courses.cursoData;
+    });
+  }
+
+  dateValidator(control: FormControl) {
+    if (!control.value) return null;
+
+    const timestamp = Date.parse(control.value);
+    if (isNaN(timestamp)) return { invalidFormat: true };
+
+    const diffTime = (Date.now() - timestamp) / 1000;
+    const minDateDiffInSeconds = 30 * 365 * 24 * 60 * 60;
+
+    // Success if the date started up to 30 years ago or in the future
+    return diffTime > minDateDiffInSeconds ? { invalidDate: true } : null;
   }
 
   onSave() {
@@ -120,22 +175,37 @@ export class EnrollmentComponent implements OnInit {
       alert('Existem campos inválidos, revise e tente novamente');
       return;
     }
+    const token = this.authtoken.getToken()
 
     const enrollmentData = this.enrollmentForm.value;
+
+
+    let body = {
+      "nome": enrollmentData.name,
+      "id_curso": enrollmentData.course,
+      "hora": enrollmentData.timeStart,
+      "dataFim": enrollmentData.dateEnd,
+      "dataInicio": enrollmentData.dateStart,
+      "id_professor": enrollmentData.teacher
+    }
     if (this.viewMode === 'edit') {
       enrollmentData.id = this.enrollmentId;
-      this.enrollmentService.setEnrollment(enrollmentData).subscribe(() => {
+      this.enrollmentService.setEnrollment(enrollmentData.id, body, token).subscribe(() => {
+        this.loader.showLoading(700)
         this.snackBar.open('Turma atualizada com sucesso!', 'Fechar', {
-          duration: 3000,
+          duration: 1500,
         });
         this.enrollmentForm.disable();
       });
     } else {
-      this.enrollmentService.addEnrollment(enrollmentData).subscribe((newEnrollment) => {
+      this.enrollmentService.addEnrollment(body, token).subscribe((newEnrollment) => {
+        this.loader.showLoading(700)
         this.snackBar.open('Turma cadastrada com sucesso!', 'Fechar', {
           duration: 3000,
         });
-        this.enrollmentId = newEnrollment.id;
+        this.enrollmentId = newEnrollment.turmaData[0].id;
+        this.viewMode = 'read';
+        this.loadEnrollmentData(this.enrollmentId);
         this.enrollmentForm.disable();
       });
     }
@@ -158,15 +228,32 @@ export class EnrollmentComponent implements OnInit {
 
   onDelete() {
     if (!this.enrollmentId) return;
-    this.userService.deleteUser(this.enrollmentId).subscribe(() => {
-      this.snackBar.open('Turma excluída com sucesso!', 'Fechar', {
-        duration: 3000,
-      });
-      this.enrollmentForm.reset();
+    const token = this.authtoken.getToken()
+    this.teacherService.getDeleteTeacherToken(this.enrollmentId, token).subscribe({
+      next: () => {
+        this.loader.showLoading(700)
+        this.snackBar.open('Turma excluída com sucesso!', 'Fechar', {
+          duration: 3000,
+        });
+        this.enrollmentForm.reset();
+      },
+      error: (data) => {
+        this.snackBar.open(data.error.message, 'Fechar', {
+          duration: 3000,
+        });
+      }
     });
   }
 
   isCurrentUserTeacher(): boolean {
     return this.authService.isTeacher();
+  }
+
+  hasError(inputName: string): boolean {
+    return this.formValidationService.inputHasError(this.enrollmentForm, inputName);
+  }
+
+  getError(inputName: string): string | undefined {
+    return this.formValidationService.getInputErrorMessage(this.enrollmentForm, inputName);
   }
 }

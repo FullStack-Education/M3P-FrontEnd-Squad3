@@ -49,9 +49,12 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             *ngFor="let enrollment of enrollments"
             [value]="enrollment.id"
           >
-            {{ enrollment.name }}
+            {{ enrollment.nome }}
           </mat-option>
         </mat-select>
+        @if (hasError("enrollment")) {
+          <mat-error>{{ getError("enrollment") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -64,9 +67,12 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
             *ngFor="let discipline of disciplines"
             [value]="discipline.id"
           >
-            {{ discipline.name }}
+            {{ discipline.nome }}
           </mat-option>
         </mat-select>
+        @if (hasError("discipline")) {
+          <mat-error>{{ getError("discipline") }}</mat-error>
+        }
       </mat-form-field>
 
       <!-- Professor -->
@@ -74,9 +80,12 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
         <mat-label>Professor</mat-label>
         <mat-select formControlName="teacher">
           <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
-            {{ teacher.name }}
+            {{ teacher.nome }}
           </mat-option>
         </mat-select>
+        @if (hasError("teacher")) {
+          <mat-error>{{ getError("teacher") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -85,6 +94,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
       <mat-form-field appearance="fill">
         <mat-label>Nome da Avaliação</mat-label>
         <input matInput formControlName="gradeName" />
+        @if (hasError("gradeName")) {
+          <mat-error>{{ getError("gradeName") }}</mat-error>
+        }
       </mat-form-field>
 
       <!-- Data da Avaliação -->
@@ -98,6 +110,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
           [showMaskTyped]="true"
         />
         <mat-hint>DD/MM/YYYY</mat-hint>
+        @if (hasError("gradeDate")) {
+          <mat-error>{{ getError("gradeDate") }}</mat-error>
+        }
       </mat-form-field>
 
       
@@ -106,9 +121,12 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
         <input type="text" matInput formControlName="student" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStudentsFn">
           <mat-option *ngFor="let student of filteredStudents | async" [value]="student">
-            {{ student.name }}
+            {{ student.nome }}
           </mat-option>
         </mat-autocomplete>
+        @if (hasError("student")) {
+          <mat-error>{{ getError("student") }}</mat-error>
+        }
       </mat-form-field>
 
       
@@ -121,6 +139,9 @@ Deverá apresentar uma confirmação ao salvar. Exemplo: toast ou alert.
           min="0"
           max="10"
         />
+        @if (hasError("grade")) {
+          <mat-error>{{ getError("grade") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 

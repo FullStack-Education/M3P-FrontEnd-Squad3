@@ -10,29 +10,54 @@
       </button>
     </div>
   </div>
+
   <form [formGroup]="enrollmentForm">
     <div class="form-row">
       <mat-form-field appearance="fill">
-        <mat-label>Professor</mat-label>
-        <mat-select formControlName="teacher">
-          <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
-            {{ teacher.name }}
+        <mat-label>Curso</mat-label>
+        <mat-select formControlName="course" [disableOptionCentering]="true">
+          <mat-option *ngFor="let course of filteredCourses" [value]="course.id">
+            {{ course.nome }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="hasError('course')">
+          {{ getError('course') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Professor</mat-label>
+        <mat-select formControlName="teacher" [disableOptionCentering]="true">
+          <mat-option *ngFor="let teacher of filteredTeachers" [value]="teacher.id">
+            {{ teacher.nome }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="hasError('teacher')">
+          {{ getError('teacher') }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="form-row">
       <mat-form-field class="full-width">
         <mat-label>Nome da turma</mat-label>
         <input matInput formControlName="name" />
+        @if (hasError("name")) {
+          <mat-error>{{ getError("name") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Data de inicio</mat-label>
         <input type="date" matInput formControlName="dateStart" placeholder="dd/mm/yyyy" />
+        @if (hasError("dateStart")) {
+          <mat-error>{{ getError("dateStart") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Data de termino</mat-label>
         <input type="date" matInput formControlName="dateEnd" placeholder="dd/mm/yyyy" />
+        @if (hasError("dateEnd")) {
+          <mat-error>{{ getError("dateEnd") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -40,6 +65,9 @@
       <mat-form-field id="time-end-field">
         <mat-label>Horário</mat-label>
         <input type="time" matInput formControlName="timeStart" placeholder="hh:mm" />
+        @if (hasError("timeStart")) {
+          <mat-error>{{ getError("timeStart") }}</mat-error>
+        }
       </mat-form-field>
     </div>
   </form>

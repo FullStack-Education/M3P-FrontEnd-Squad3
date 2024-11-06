@@ -15,10 +15,16 @@
       <mat-form-field class="full-width">
         <mat-label>Nome Completo</mat-label>
         <input matInput formControlName="name" />
+        @if (hasError("name")) {
+          <mat-error>{{ getError("name") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Telefone</mat-label>
-        <input matInput formControlName="phone" />
+        <input matInput formControlName="phone" mask="(00) 00000-0000" shownMaskExpression="(__) _____-____" [showMaskTyped]="true"/>
+        @if (hasError("phone")) {
+          <mat-error>{{ getError("phone") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -30,6 +36,9 @@
           <mat-option value="M">Masculino</mat-option>
           <mat-option value="F">Feminino</mat-option>
         </mat-select>
+        @if (hasError("gender")) {
+          <mat-error>{{ getError("gender") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Estado Civil</mat-label>
@@ -38,10 +47,16 @@
           <mat-option value="married">Casado(a)</mat-option>
           <!-- Add more options as needed -->
         </mat-select>
+        @if (hasError("maritalStatus")) {
+          <mat-error>{{ getError("maritalStatus") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Data de Nascimento</mat-label>
-        <input matInput formControlName="birthDate" placeholder="dd/mm/yyyy" />
+        <input matInput formControlName="birthDate" mask="d0/M0/0000" placeholder="dd/MM/yyyy"/>
+        @if (hasError("birthDate")) {
+          <mat-error>{{ getError("birthDate") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -50,10 +65,16 @@
       <mat-form-field class="full-width">
         <mat-label>E-mail</mat-label>
         <input matInput formControlName="email" />
+        @if (hasError("email")) {
+          <mat-error>{{ getError("email") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Senha</mat-label>
         <input matInput formControlName="password" type="password" />
+        @if (hasError("password")) {
+          <mat-error>{{ getError("password") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -61,15 +82,24 @@
     <div class="form-row">
       <mat-form-field>
         <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" />
+        <input matInput formControlName="cpf" mask="000.000.000-00" shownMaskExpression="___.___.___-__" [showMaskTyped]="true"/>
+        @if (hasError("cpf")) {
+          <mat-error>{{ getError("cpf") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>RG</mat-label>
-        <input matInput formControlName="rg" />
+        <input matInput formControlName="rg"/>
+        @if (hasError("rg")) {
+          <mat-error>{{ getError("rg") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Naturalidade</mat-label>
         <input matInput formControlName="naturalness" />
+        @if (hasError("naturalness")) {
+          <mat-error>{{ getError("naturalness") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -79,9 +109,12 @@
         <mat-label>Matérias</mat-label>
         <mat-select formControlName="subjects" multiple >
           <mat-option *ngFor="let subject of subjects" [value]="subject.id">
-            {{ subject.name }}
+            {{ subject.nome }}
           </mat-option>
         </mat-select>
+        @if (hasError("subjects")) {
+          <mat-error>{{ getError("subjects") }}</mat-error>
+        }
       </mat-form-field>
     </div>
 
@@ -89,29 +122,47 @@
     <div class="form-row">
       <mat-form-field>
         <mat-label>CEP</mat-label>
-        <input matInput formControlName="cep" (blur)="onCepBlur()" />
+        <input matInput formControlName="cep" (blur)="onCepBlur()" mask="00.000-000" shownMaskExpression="__.___-___" [showMaskTyped]="true"/>
+        @if (hasError("cep")) {
+          <mat-error>{{ getError("cep") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Logradouro</mat-label>
         <input matInput formControlName="street" />
+        @if (hasError("street")) {
+          <mat-error>{{ getError("street") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Número</mat-label>
         <input matInput formControlName="number" />
+        @if (hasError("number")) {
+          <mat-error>{{ getError("number") }}</mat-error>
+        }
       </mat-form-field>
     </div>
       <div class="form-row">
       <mat-form-field>
         <mat-label>Cidade</mat-label>
         <input matInput formControlName="city" />
+        @if (hasError("city")) {
+          <mat-error>{{ getError("city") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Estado</mat-label>
         <input matInput formControlName="state"/>
+        @if (hasError("state")) {
+          <mat-error>{{ getError("state") }}</mat-error>
+        }
       </mat-form-field>
       <mat-form-field>
         <mat-label>Complemento</mat-label>
         <input matInput formControlName="complement" />
+        @if (hasError("complement")) {
+          <mat-error>{{ getError("complement") }}</mat-error>
+        }
       </mat-form-field>
     </div>
   </form>

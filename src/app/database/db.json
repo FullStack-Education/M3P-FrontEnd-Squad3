@@ -17,10 +17,11 @@
     {
       "id": "1",
       "name": "Alice De Santiago",
-      "papelId": "3",
+      "papelId": "1",
       "password": "123456",
       "age": "20",
-      "phone": "123456789"
+      "phone": "123456789",
+      "email":"admin@email"
     },
     {
       "name": "Bob from Hallmark",
@@ -40,8 +41,8 @@
       "state": "SC",
       "complement": "",
       "enrollments": [
-        "2",
-        "3"
+        "1",
+        "4"
       ],
       "papelId": "3",
       "id": "2"
@@ -55,12 +56,27 @@
       "phone": "123456789"
     },
     {
-      "id": "4",
-      "name": "João de Ipatinga",
+      "name": "Suene",
+      "gender": "F",
+      "birthDate": "01/01/2000",
+      "cpf": "21312312",
+      "rg": "123123123",
+      "maritalStatus": "single",
+      "phone": "123456789",
+      "email": "aluno1@email",
+      "password": "11223344",
+      "naturalness": "123123123",
+      "cep": "88064400",
+      "street": "Rua Severino Firmino Martins",
+      "number": "611",
+      "city": "Florianópolis",
+      "state": "SC",
+      "complement": "",
+      "enrollments": [
+        "2"
+      ],
       "papelId": "3",
-      "password": "123456",
-      "age": "20",
-      "phone": "123456789"
+      "id": "4"
     },
     {
       "id": "5",
@@ -239,11 +255,9 @@
       "courseId": "2",
       "subjectId": "2",
       "name": "Turma B",
-      "cursoId": "2",
       "teacherId": "11",
       "studentIds": [
         "4",
-        "5",
         "6"
       ]
     },
@@ -261,14 +275,14 @@
     },
     {
       "id": "4",
-      "courseId": "3",
+      "courseId": "1",
       "subjectId": "1",
       "name": "Turma B",
       "cursoId": "2",
       "teacherId": "11",
       "studentIds": [
-        "4",
         "2",
+        "3",
         "6"
       ]
     },
@@ -328,7 +342,7 @@
       "usuarioId": "3",
       "materiaId": "1",
       "professorId": "10",
-      "name": "nota final",
+      "name": "Avalição 1",
       "grade": "10",
       "date": "01/10/2024"
     },
@@ -337,7 +351,7 @@
       "usuarioId": "3",
       "materiaId": "2",
       "professorId": "10",
-      "name": "nota parcial 1",
+      "name": "Avaliação 2",
       "grade": "9",
       "date": "01/10/2024"
     },
@@ -346,23 +360,23 @@
       "usuarioId": "3",
       "materiaId": "3",
       "professorId": "10",
-      "name": "nota parcial 2",
+      "name": "Avaliação Final",
       "grade": "8",
       "date": "01/10/2024"
     },
     {
       "id": "8df1",
       "teacher": 11,
-      "enrollment": "cf44",
-      "discipline": "1",
+      "enrollment": "2",
+      "discipline": "Sei",
       "gradeName": "teste",
       "gradeDate": "01012000",
       "student": {
-        "id": "1",
-        "name": "Alice De Santiago",
+        "id": "4",
+        "name": "Suene",
         "papelId": "3",
-        "password": "123456",
-        "age": "20",
+        "password": "11223344",
+        "age": "24",
         "phone": "123456789"
       },
       "grade": 9
