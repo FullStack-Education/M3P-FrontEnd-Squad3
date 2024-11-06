@@ -2,15 +2,28 @@
 
 ![Imagem da tela de login do sistema LabPCP](/public/assets/LABPCP.png)
 
+
 ## Descrição do Projeto
 
-Bem-vindo(a) ao repositório Front-End do projeto!
+O **LabPCP - Gestão Educacional** é um sistema web de gestão educacional desenvolvido como parte do projeto avaliativo do módulo 3.
 
-O **LabPCP - Gestão Educacional** é uma aplicação web desenvolvida para facilitar a gestão educacional em instituições de ensino. O sistema oferece funcionalidades para gerenciar docentes, alunos, turmas e notas, proporcionando uma interface amigável e intuitiva para administradores e professores.
+Este sistema proporciona funcionalidades essenciais para a administração de instituições educacionais, permitindo o cadastro de turmas, avaliações, docentes e alunos, além de oferecer recursos para alocação de professores, gerenciamento de notas e controle de acesso dos usuários.
+
+Desenvolvido utilizando Angular 18, o **LabPCP - Gestão Educacional** emprega tecnologias modernas e práticas de desenvolvimento, incluindo TypeScript, HTML, SCSS, Material UI e GitHub para versionamento do código.
+
+Além disso, a metodologia de desenvolvimento utiliza o Kanban no Trello para organização das tarefas, garantindo uma abordagem ágil e eficiente.
+
+O sistema atende a uma variedade de papéis de usuários, como administradores, docentes e alunos, cada um com suas permissões específicas de acesso e funcionalidades disponíveis.
+
+Com uma arquitetura sólida e uma implementação cuidadosa das regras de negócio, o Educação FullStack é uma solução completa para a gestão educacional, proporcionando uma experiência de usuário eficaz para todas as partes envolvidas no processo educativo.
+
+---
 
 ### Problema que Resolve
 
 A aplicação resolve o problema da complexidade na gestão de informações acadêmicas, como o cadastro e controle de docentes, alunos, turmas e avaliações. Ela centraliza esses dados em um único sistema, permitindo um gerenciamento eficiente e organizado, além de garantir que apenas usuários autorizados possam acessar ou modificar certas informações.
+
+---
 
 ## Tecnologias Utilizadas
 
@@ -33,6 +46,8 @@ A aplicação resolve o problema da complexidade na gestão de informações aca
 ### Estrutura da Aplicação
 A aplicação é organizada em módulos, componentes e serviços, facilitando a manutenção e escalabilidade. 
 
+---
+
 ## Como Executar o Projeto
 
 ### Pré-requisitos
@@ -44,27 +59,30 @@ A aplicação é organizada em módulos, componentes e serviços, facilitando a 
 
 ### Passos para Execução
 
-1. **Clone o repositório:**  
+1. **Iniciar o Back-end:**
+  Se não iniciado, rodar a aplicação do back-end. 
+  [Veja como](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
+
+
+2. **Clone o repositório:**
    ```
    git clone https://github.com/FullStack-Education/M3P-FrontEnd-Squad3.git cd /M3P-FrontEnd-Squad3
    ```
 
-2. **Iniciar o Back-end:**
-  Se não iniciado, rodar a aplicação do back-end. 
-  [Veja como](https://github.com/FullStack-Education/M3P-BackEnd-Squad3)
-
-1. **Instale as dependências:**
+3. **Instale as dependências:**
     ```
     npm install
     ```
 
-2. **Inicie a aplicação:**
+4. **Inicie a aplicação:**
     ```
     npm run start:proxi
     ```
 
-3. **Acesse a aplicação no navegador:**
+5. **Acesse a aplicação no navegador:**
   http://localhost:4200
+
+### Obs: Garanta que a porta `4200` estaja diponivel no seu dispositivo
 
 ### Dados Predefinidos
 
@@ -80,6 +98,8 @@ Para facilitar os testes e utilização do sistema, a aplicação possui alguns 
   - Login: `maria@mail.com`
   - Senha: `123456`
 
+---
+
 ## Roteiro da Aplicação
 
 Possuir as seguintes páginas e funcionalidades:
@@ -94,6 +114,8 @@ Possuir as seguintes páginas e funcionalidades:
 - Cadastro de Notas
 - Listagem de Docentes
 - Listagem de Avaliações
+
+---
 
 ## Possíveis Melhorias
 
