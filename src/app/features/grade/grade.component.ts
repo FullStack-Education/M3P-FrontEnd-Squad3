@@ -133,16 +133,12 @@ export class GradeComponent implements OnInit {
       });
   
     }
-
-    this.enrollmentService
-      .getEnrollmentsToken(this.token)
-      .subscribe((data) => {
-        this.enrollments = data.turmaData;
-        console.log('Enrollments:', this.enrollments);
-      });
-
     this.studentService.getStudentsToken(this.token).subscribe((data) => {
       this.students = data.alunoData;
+      const alunoId = this.route.snapshot.queryParamMap.get('studentId')
+      if (alunoId) {
+        this.students = this.students.filter(aluno => aluno.id == parseInt(alunoId));
+      }
       this.filteredStudents = this.gradeForm.get('student')!.valueChanges.pipe(
         startWith(''),
         map((value) => this._filter(value || ''))
