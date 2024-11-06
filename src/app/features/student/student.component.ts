@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -33,6 +33,7 @@ import AuthTokenService from '../../core/services/auth-token.service';
 import moment from 'moment';
 import { ITurma } from '../../core/interfaces/turma.inteface';
 import { IStudent } from '../../core/interfaces/student.interface';
+import { LoaderService } from '../../core/services/loader.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 
@@ -57,6 +58,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
   ],
 })
 export class StudentComponent implements OnInit {
+  loader = inject(LoaderService);
   studentForm!: FormGroup;
   genders = ['Masculino', 'Feminino', 'Outro'];
   maritalStatuses = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo'];
@@ -309,6 +311,7 @@ export class StudentComponent implements OnInit {
       }
 
       this.studentService.saveStudentToken(body,token).subscribe(() => {
+        this.loader.showLoading(700)
         this.snackBar.open('Aluno cadastrado com sucesso!', 'Fechar', {
           duration: 3000,
         });
@@ -338,6 +341,7 @@ export class StudentComponent implements OnInit {
     if (!this.studentId) return;
     let token = this.authToken.getToken()
     this.studentService.deleteStudentToken(parseInt(this.studentId),token).subscribe(() => {
+      this.loader.showLoading(700)
       this.snackBar.open('Aluno excluído com sucesso!', 'Fechar', {
         duration: 3000,
       });
