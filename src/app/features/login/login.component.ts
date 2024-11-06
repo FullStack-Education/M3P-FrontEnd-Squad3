@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -18,6 +18,7 @@ import { IUser } from '../../core/interfaces/user.interface';
 import { FormValidationService } from '../../core/services/form-validation.service';
 import AuthTokenService from '../../core/services/auth-token.service';
 import { IToken } from '../../core/interfaces/Itoken.inteface';
+import { LoaderService } from '../../core/services/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,7 @@ import { IToken } from '../../core/interfaces/Itoken.inteface';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+  loader = inject(LoaderService);
   email: string = '';
   password: string = '';
   loginForm: FormGroup;
@@ -81,7 +83,7 @@ export class LoginComponent {
     private formValidationService: FormValidationService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private authToken: AuthTokenService
+    private authToken: AuthTokenService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -98,8 +100,9 @@ export class LoginComponent {
           this.snackBar.open(
             `Bem vinda, ${user.name}! Papel: ${user.scope}`,
             'Close',
-            { duration: 3000 }
+            { duration: 1000 }
           ).afterDismissed().subscribe(() => {
+            this.loader.showLoading(700)
             this.router.navigate(['/home']);
           });
         } else {
