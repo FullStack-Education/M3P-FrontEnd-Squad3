@@ -5,7 +5,7 @@ import { TeacherService } from '../../core/services/teacher.service';
 import AuthTokenService from '../../core/services/auth-token.service';
 import {  ViaCepService } from '../../core/services/viacep.service';
 import { EnrollmentService } from '../../core/services/enrollment.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarDismiss, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, provideRouter } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
@@ -86,7 +86,13 @@ fdescribe('TeacherComponent', () => {
     authTokenServiceSpy = jasmine.createSpyObj('AuthTokenService', ['getToken']);
     viaCepServiceSpy = jasmine.createSpyObj('ViaCepService', ['getAddressByCep']);
     enrollmentServiceSpy = jasmine.createSpyObj('EnrollmentService', ['getDisciplinesToken']);
+
+    const snackBarRefStub: Partial<MatSnackBarRef<TextOnlySnackBar>> = {
+      afterDismissed: () => of({ dismissedByAction: false } as MatSnackBarDismiss),
+    };
+
     snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+    snackBarSpy.open.and.returnValue(snackBarRefStub as MatSnackBarRef<TextOnlySnackBar>);
 
     const paramMapSpy = jasmine.createSpyObj<ParamMap>('ParamMap', ['get', 'getAll', 'has', 'keys']);
     paramMapSpy.get.and.callFake((key: string) => (key === 'id' ? '1' : 'read'));
@@ -153,20 +159,18 @@ fdescribe('TeacherComponent', () => {
   });
 
   it('deve exibir mensagem de erro se CEP for inválido', () => {
-    // Configura o controle de CEP com um valor válido
+  
     const cepControl = component.teacherForm.get('cep');
-    cepControl?.setValue('12345678'); // Define um valor qualquer de CEP
+    cepControl?.setValue('12345678'); 
     cepControl?.markAsTouched();
     cepControl?.markAsDirty();
     
-    // Simula o retorno do serviço ViaCepService com um erro (CEP inválido)
     viaCepServiceSpy.getAddressByCep.and.returnValue(of({ erro: true } as any));
   
-    // Chama o método onCepBlur para disparar a validação
     component.onCepBlur();
-    fixture.detectChanges(); // Força a detecção de mudanças
+    fixture.detectChanges(); 
   
-    // Verifica se o MatSnackBar.open foi chamado com os parâmetros corretos
+  
     expect(snackBarSpy.open).toHaveBeenCalledWith(
       'CEP informado não existe!', 
       'Fechar', 
