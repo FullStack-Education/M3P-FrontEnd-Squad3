@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +17,7 @@ import { IToken } from '../../core/interfaces/Itoken.inteface';
 import AuthTokenService from '../../core/services/auth-token.service';
 import { IResponseNotaAluno } from '../../core/interfaces/response.nota.aluno.inteface';
 import { INota } from '../../core/interfaces/nota.inteface';
+import { LoaderService } from '../../core/services/loader.service';
 
 @Component({
   selector: 'app-grade-list',
@@ -34,6 +35,7 @@ import { INota } from '../../core/interfaces/nota.inteface';
   styleUrl: './grade-list.component.scss',
 })
 export class GradeListComponent implements OnInit {
+  loader = inject(LoaderService);
   grades: IStudentGrade[] = [];
   filteredGrades: IStudentGrade[] = [];
   searchQuery: string = '';

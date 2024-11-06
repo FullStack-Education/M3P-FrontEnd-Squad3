@@ -102,8 +102,7 @@
         <button *ngIf="isCurrentUserAdmin()" 
           mat-stroked-button 
           aria-label="Ver mais" 
-          [routerLink]="['/student']"
-          [queryParams] = "{ id: student.id }">
+          (click)="routeStudente('/student',student.id)" >
           ver mais
         </button>
 
@@ -111,6 +110,7 @@
           *ngIf="isCurrentUserTeacher()" 
           mat-stroked-button 
           aria-label="Ver mais" 
+          (click)="route('/grade',student.id)"
           [routerLink]="['/grade']"
           [queryParams] = "{ studentId : student.id}" >
           lançar nota

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
 import { EnrollmentService, IDisciplines, IEnrollmentClass } from '../../core/services/enrollment.service';
@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
-  MatOptionModule, 
+  MatOptionModule,
   DateAdapter,
 } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -31,6 +31,7 @@ import { ITeacher } from '../../core/interfaces/teacher.interface';
 import { ITurma } from '../../core/interfaces/turma.inteface';
 import { IMateria } from '../../core/interfaces/response.materias.inteface';
 import { IStudent } from '../../core/interfaces/student.interface';
+import { LoaderService } from '../../core/services/loader.service';
 
 type typeViewMode = 'read' | 'insert' | 'edit';
 @Component({
@@ -56,6 +57,7 @@ type typeViewMode = 'read' | 'insert' | 'edit';
   styleUrl: './grade.component.scss',
 })
 export class GradeComponent implements OnInit {
+  loader = inject(LoaderService);
   gradeForm: FormGroup;
   teachers: ITeacher[] = [];
   enrollments = [] as ITurma[];
@@ -65,8 +67,8 @@ export class GradeComponent implements OnInit {
   selectedEnrollment: string | null = null;
   viewMode: typeViewMode = 'read';
   gradeId: number | null = null;
-  token!:string;
-  currentTeacher:ITeacher|null = null 
+  token!: string;
+  currentTeacher: ITeacher | null = null
 
 
   constructor(
@@ -110,7 +112,7 @@ export class GradeComponent implements OnInit {
         });
       }
     } else {
-      this.gradeId = (paramGradeId)? parseInt(paramGradeId) : 0;
+      this.gradeId = (paramGradeId) ? parseInt(paramGradeId) : 0;
       this.loadGradeData(this.gradeId.toString());
       const viewModeParam =
         this.route.snapshot.queryParamMap.get('mode') || 'read';
@@ -127,11 +129,11 @@ export class GradeComponent implements OnInit {
       });
     } else if (this.authService.isTeacher()) {
       let clain = this.authtoken.decodePayloadJWT()
-      this.teacherService.getTeacherByIdToken(clain.id_docente,this.token).subscribe((data) => {
+      this.teacherService.getTeacherByIdToken(clain.id_docente, this.token).subscribe((data) => {
         this.teachers = data.docenteData;
         this.teachers = data.docenteData.filter(teacher => teacher.id == clain.id_docente);
       });
-  
+
     }
     this.studentService.getStudentsToken(this.token).subscribe((data) => {
       this.students = data.alunoData;
@@ -193,7 +195,7 @@ export class GradeComponent implements OnInit {
 
     const gradeData = this.gradeForm.value;
 
-    
+
 
     let body = {
       id_aluno: gradeData.student.id,
@@ -202,24 +204,25 @@ export class GradeComponent implements OnInit {
       id_turma: gradeData.enrollment,
       nome: gradeData.gradeName,
       valor: gradeData.grade,
-      data: moment(gradeData.gradeDate,"DD-MM-YYYY").format("YYYY-MM-DD")
+      data: moment(gradeData.gradeDate, "DD-MM-YYYY").format("YYYY-MM-DD")
     }
 
     console.log(body)
     console.log(gradeData)
     if (this.viewMode === 'edit') {
       gradeData.id = this.gradeId;
-      this.gradeService.setGradeToken(gradeData.id,body,this.token).subscribe(() => {
+      this.gradeService.setGradeToken(gradeData.id, body, this.token).subscribe(() => {
         this.snackBar.open('Nota atualizada com sucesso!', 'Fechar', {
           duration: 3000,
         });
         this.gradeForm.disable();
       });
     } else {
-      this.gradeService.addGradeToken(body,this.token).subscribe((newGrade) => {
+      this.gradeService.addGradeToken(body, this.token).subscribe((newGrade) => {
         this.snackBar.open('Nota cadastrada com sucesso!', 'Fechar', {
           duration: 3000,
         });
+        this.loader.showLoading(700)
         this.router.navigate(['home']);
       });
     }
@@ -244,7 +247,7 @@ export class GradeComponent implements OnInit {
 
   onDelete() {
     if (!this.gradeId) return;
-    this.gradeService.deleteGradeToken(this.gradeId,this.token).subscribe(() => {
+    this.gradeService.deleteGradeToken(this.gradeId, this.token).subscribe(() => {
       this.snackBar.open('Nota excluída com sucesso!', 'Fechar', {
         duration: 3000,
       });

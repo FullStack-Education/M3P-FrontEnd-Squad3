@@ -15,7 +15,7 @@
       </mat-list-item>
 
       <mat-list-item>
-        <button mat-button [routerLink]="['/home']">
+        <button mat-button (click)="route('/home')" >
           <mat-icon>home</mat-icon>
           <span *ngIf="opened">Início</span>
         </button>
@@ -26,28 +26,28 @@
       </mat-list-item>
 
       <mat-list-item *ngIf="isAdmin" >
-        <button mat-button [routerLink]="['/teacher']">
+        <button mat-button (click)="route('/teacher')"  >
           <mat-icon>school</mat-icon>
           <span *ngIf="opened">Cadastrar Docentes</span>
         </button>
       </mat-list-item>
 
       <mat-list-item *ngIf="isAdmin">
-        <button mat-button [routerLink]="['/student']">
+        <button mat-button (click)="route('/student')"  >
           <mat-icon>group</mat-icon>
           <span *ngIf="opened">Cadastrar Alunos</span>
         </button>
       </mat-list-item>
 
       <mat-list-item *ngIf="isAdmin || isDocente">
-        <button mat-button [routerLink]="['/enrollment']">
+        <button mat-button (click)="route('/enrollment')"  >
           <mat-icon>class</mat-icon>
           <span *ngIf="opened">Cadastrar Turma</span>
         </button>
       </mat-list-item>
 
       <mat-list-item *ngIf="isAdmin || isDocente">
-        <button mat-button [routerLink]="['/grade']">
+        <button mat-button (click)="route('/grade')" >
           <mat-icon>assignment</mat-icon>
           <span *ngIf="opened">Cadastrar Avaliação</span>
         </button>
@@ -58,13 +58,13 @@
         <p>Detalhamento</p>
       </mat-list-item>
       <mat-list-item *ngIf="isAluno">
-        <button mat-button [routerLink]="['/grade-list']">
+        <button mat-button (click)="route('/grade-list')" >
           <mat-icon>grade</mat-icon>
           <span *ngIf="opened">Notas</span>
         </button>
       </mat-list-item>
       <mat-list-item *ngIf="isAdmin">
-        <button mat-button [routerLink]="['/teacher-list']">
+        <button mat-button (click)="route('/teacher-list')" >
           <mat-icon>list</mat-icon>
           <span *ngIf="opened">Listagem de Docentes</span>
         </button>
