@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { MatCardModule } from '@angular/material/card';
@@ -14,6 +14,7 @@ import { TeacherService } from '../../core/services/teacher.service';
 import { IResponseTeachers } from '../../core/interfaces/response.teacher.interface';
 import { ITeacher } from '../../core/interfaces/teacher.interface';
 import { PhonePipe } from '../../core/pipes/phone.pipe';
+import { LoaderService } from '../../core/services/loader.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ import { PhonePipe } from '../../core/pipes/phone.pipe';
   styleUrl: './teacher-list.component.scss',
 })
 export class TeacherListComponent implements OnInit {
+  loader = inject(LoaderService);
   teachers: ITeacher[] = [];
   filteredTeachers: ITeacher[] = [];
   searchQuery: string = '';
@@ -66,6 +68,7 @@ export class TeacherListComponent implements OnInit {
   }
 
   viewTeacher(id: string) {
+    this.loader.showLoading(800)
     this.router.navigate(['/teacher'], {
       queryParams: { id: id, mode: 'read' },
     });
