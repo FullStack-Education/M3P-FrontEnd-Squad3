@@ -17,9 +17,13 @@ O sistema atende a uma variedade de papéis de usuários, como administradores, 
 
 Com uma arquitetura sólida e uma implementação cuidadosa das regras de negócio, o Educação FullStack é uma solução completa para a gestão educacional, proporcionando uma experiência de usuário eficaz para todas as partes envolvidas no processo educativo.
 
+---
+
 ### Problema que Resolve
 
 A aplicação resolve o problema da complexidade na gestão de informações acadêmicas, como o cadastro e controle de docentes, alunos, turmas e avaliações. Ela centraliza esses dados em um único sistema, permitindo um gerenciamento eficiente e organizado, além de garantir que apenas usuários autorizados possam acessar ou modificar certas informações.
+
+---
 
 ## Tecnologias Utilizadas
 
@@ -41,6 +45,8 @@ A aplicação resolve o problema da complexidade na gestão de informações aca
 
 ### Estrutura da Aplicação
 A aplicação é organizada em módulos, componentes e serviços, facilitando a manutenção e escalabilidade. 
+
+---
 
 ## Como Executar o Projeto
 
@@ -92,6 +98,8 @@ Para facilitar os testes e utilização do sistema, a aplicação possui alguns 
   - Login: `maria@mail.com`
   - Senha: `123456`
 
+---
+
 ## Roteiro da Aplicação
 
 Possuir as seguintes páginas e funcionalidades:
@@ -106,6 +114,8 @@ Possuir as seguintes páginas e funcionalidades:
 - Cadastro de Notas
 - Listagem de Docentes
 - Listagem de Avaliações
+
+---
 
 ## Possíveis Melhorias
 
